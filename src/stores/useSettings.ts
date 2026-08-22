@@ -6,6 +6,7 @@ export const DEFAULT_VALUES = {
   gridColumns: undefined,
   dialSize: 112,
   dialRadius: "sm",
+  showSpeedDialTitles: true,
   showAddNewButton: true,
   showSettingsButton: true,
   showHelpButton: true,
@@ -29,6 +30,11 @@ export const dialSize = storage.defineItem<number>("local:dialSize", {
 export const dialRadius = storage.defineItem<string>("local:dialRadius", {
   fallback: DEFAULT_VALUES.dialRadius,
 })
+
+export const showSpeedDialTitles = storage.defineItem<boolean>(
+  "local:showSpeedDialTitles",
+  { fallback: DEFAULT_VALUES.showSpeedDialTitles }
+)
 
 export const showAddNewButton = storage.defineItem<boolean>(
   "local:showAddNewButton",
@@ -80,6 +86,7 @@ export const resetAllSettings = async () => {
     gridColumns.setValue(DEFAULT_VALUES.gridColumns),
     dialSize.setValue(DEFAULT_VALUES.dialSize),
     dialRadius.setValue(DEFAULT_VALUES.dialRadius),
+    showSpeedDialTitles.setValue(DEFAULT_VALUES.showSpeedDialTitles),
     showAddNewButton.setValue(DEFAULT_VALUES.showAddNewButton),
     showSettingsButton.setValue(DEFAULT_VALUES.showSettingsButton),
     showHelpButton.setValue(DEFAULT_VALUES.showHelpButton),
@@ -105,6 +112,9 @@ export const resetSetting = async (
       break
     case "dialRadius":
       await dialRadius.setValue(defaultValue as string)
+      break
+    case "showSpeedDialTitles":
+      await showSpeedDialTitles.setValue(defaultValue as boolean)
       break
     case "showAddNewButton":
       await showAddNewButton.setValue(defaultValue as boolean)

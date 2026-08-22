@@ -17,6 +17,7 @@ interface P {
   openModal: (type: ModalTypes, item?: BookmarkDataType) => void
   duplicateSpeedDial: (item: Partial<BookmarkDataType>) => void
   openFolder: (folder: BookmarkDataType) => void
+  showTitle: boolean
 }
 
 export const GridItem = (props: P) => {
@@ -53,36 +54,38 @@ export const GridItem = (props: P) => {
         </Show>
       </div>
 
-      <Tooltip.Root
-        lazyMount
-        unmountOnExit
-        closeDelay={0}
-        openDelay={100}
-        positioning={{ placement: "bottom" }}
-        closeOnPointerDown={false}
-      >
-        <Tooltip.Trigger
-          asChild={(triggerProps) => (
-            <span {...triggerProps} class={classes.gridItemText}>
-              {props.item.title}
-            </span>
-          )}
-        />
+      <Show when={props.showTitle}>
+        <Tooltip.Root
+          lazyMount
+          unmountOnExit
+          closeDelay={0}
+          openDelay={100}
+          positioning={{ placement: "bottom" }}
+          closeOnPointerDown={false}
+        >
+          <Tooltip.Trigger
+            asChild={(triggerProps) => (
+              <span {...triggerProps} class={classes.gridItemText}>
+                {props.item.title}
+              </span>
+            )}
+          />
 
-        <Portal>
-          <Tooltip.Positioner>
-            <Tooltip.Arrow>
-              <Tooltip.ArrowTip />
-            </Tooltip.Arrow>
-            <Tooltip.Content w="max-content" maxW="3xl" textAlign="center">
-              <Text>{props.item.title}</Text>
-              <Show when={props.item.url}>
-                <Text>{props.item.url}</Text>
-              </Show>
-            </Tooltip.Content>
-          </Tooltip.Positioner>
-        </Portal>
-      </Tooltip.Root>
+          <Portal>
+            <Tooltip.Positioner>
+              <Tooltip.Arrow>
+                <Tooltip.ArrowTip />
+              </Tooltip.Arrow>
+              <Tooltip.Content w="max-content" maxW="3xl" textAlign="center">
+                <Text>{props.item.title}</Text>
+                <Show when={props.item.url}>
+                  <Text>{props.item.url}</Text>
+                </Show>
+              </Tooltip.Content>
+            </Tooltip.Positioner>
+          </Portal>
+        </Tooltip.Root>
+      </Show>
     </div>
   )
 
@@ -102,6 +105,7 @@ export const GridItem = (props: P) => {
             class={classes.gridItemAction}
             onClick={() => props.openFolder(props.item)}
             aria-label={`Open ${props.item.title} folder`}
+            title={props.showTitle ? undefined : props.item.title}
           >
             {itemContent()}
           </button>
@@ -113,6 +117,8 @@ export const GridItem = (props: P) => {
             href={url()}
             target={target()}
             rel={target() === "_blank" ? "noreferrer" : undefined}
+            aria-label={`Open ${props.item.title}`}
+            title={props.showTitle ? undefined : props.item.title}
           >
             {itemContent()}
           </a>
