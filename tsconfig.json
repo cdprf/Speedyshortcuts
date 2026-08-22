@@ -3,7 +3,15 @@
   "compilerOptions": {
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "baseUrl": "./",
+    "ignoreDeprecations": "6.0", // This is needed for baseUrl
+    "paths": {
+      "~": ["./src"],
+      "~/*": ["./src/*"],
+      "styled-system": ["./styled-system"],
+      "styled-system/*": ["./styled-system/*"]
+    }
   },
   "include": ["src", "styled-system"]
 }

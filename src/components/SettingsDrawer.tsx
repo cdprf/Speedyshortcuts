@@ -31,7 +31,7 @@ import { Show, createSignal, onMount, createMemo } from "solid-js"
 import { Slider } from "~/components/ui/slider"
 import { radii } from "@park-ui/panda-preset"
 import { parseColor } from "@ark-ui/solid"
-import { getGridDimensions } from "@/utils"
+import { getGridDimensions } from "~/utils"
 import { CustomTooltip } from "./CustomTooltip"
 
 export const SettingsDrawer = () => {
@@ -168,8 +168,8 @@ export const SettingsDrawer = () => {
                 currentImage={currentBgImage()}
                 accept="image/*"
                 onFilesChange={async (files) => {
-                  if (files.length > 0) {
-                    const file = files[0]
+                  const file = files[0]
+                  if (file) {
                     const reader = new FileReader()
                     reader.onloadend = async () => {
                       const base64String = reader.result as string
@@ -285,13 +285,7 @@ export const SettingsDrawer = () => {
                       radii.length - 1,
                       radii.indexOf(
                         currentDialRadius() as
-                          | "xs"
-                          | "sm"
-                          | "md"
-                          | "lg"
-                          | "xl"
-                          | "2xl"
-                          | "none"
+                          "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "none"
                       ) || 0
                     )
                   ),

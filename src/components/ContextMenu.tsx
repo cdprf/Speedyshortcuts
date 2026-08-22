@@ -10,7 +10,7 @@ import { Portal } from "solid-js/web"
 import { HStack } from "styled-system/jsx"
 import { browser } from "wxt/browser"
 import { Menu } from "~/components/ui/menu"
-import { BookmarkDataType, ModalTypes } from "~/stores"
+import type { BookmarkDataType, ModalTypes } from "~/stores"
 import classes from "~/styles/Grid.module.scss"
 
 type P = {

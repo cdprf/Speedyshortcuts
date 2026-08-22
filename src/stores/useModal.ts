@@ -2,7 +2,7 @@ import { createSignal } from "solid-js"
 import { isUrlValid } from "~/utils"
 import {
   addNewSpeedDial,
-  BookmarkDataType,
+  type BookmarkDataType,
   deleteSpeedDial,
   editSpeedDial,
 } from "./"

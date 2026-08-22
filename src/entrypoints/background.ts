@@ -1,7 +1,7 @@
 import { defineBackground } from "wxt/utils/define-background"
 import { storage } from "wxt/utils/storage"
 import { browser, type Browser } from "wxt/browser"
-import { addNewSpeedDial } from "@/stores"
+import { addNewSpeedDial } from "~/stores"
 
 const toggleSettingsDrawer = storage.defineItem<boolean>(
   "local:toggleSettingsDrawer",

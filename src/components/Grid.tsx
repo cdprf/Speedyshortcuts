@@ -3,7 +3,7 @@ import { PlusIcon, SettingsIcon } from "lucide-solid"
 import { dndzone } from "solid-dnd-directive"
 import { For, createSignal, createEffect, onMount, Show } from "solid-js"
 import {
-  BookmarkDataType,
+  type BookmarkDataType,
   duplicateSpeedDial,
   moveSpeedDial,
   openModal,

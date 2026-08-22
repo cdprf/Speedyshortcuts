@@ -1,7 +1,4 @@
-import {
-  Grid,
-  // ToastProvider
-} from "~/components"
+import { Grid } from "~/components"
 import classes from "~/styles/App.module.scss"
 import { createEffect, onMount } from "solid-js"
 import {
@@ -59,11 +56,8 @@ export const App = () => {
   })
 
   return (
-    <>
-      {/* <ToastProvider /> */}
-      <div class={classes.app}>
-        <Grid />
-      </div>
-    </>
+    <div class={classes.app}>
+      <Grid />
+    </div>
   )
 }

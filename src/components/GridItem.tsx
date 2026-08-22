@@ -2,7 +2,11 @@ import { FolderIcon } from "lucide-solid"
 import { Portal } from "solid-js/web"
 import { Text } from "~/components/ui/text"
 import { Tooltip } from "~/components/ui/tooltip"
-import { BookmarkDataType, ModalTypes, openLinksInNewTab } from "~/stores"
+import {
+  type BookmarkDataType,
+  type ModalTypes,
+  openLinksInNewTab,
+} from "~/stores"
 import classes from "~/styles/Grid.module.scss"
 import { getFaviconUrl } from "~/utils"
 import { ContextMenu } from "./"

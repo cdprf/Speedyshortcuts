@@ -71,25 +71,25 @@ export const FileUpload = (
               {/* Error Messages */}
               <ParkFileUpload.Context>
                 {(fileUpload) => (
-                  <Show when={fileUpload().rejectedFiles.length > 0}>
-                    <Alert.Root my="3">
-                      <Alert.Icon
-                        asChild={(iconProps) => (
-                          <CircleAlertIcon size={18} {...iconProps()} />
-                        )}
-                      />
-                      <Alert.Content>
-                        <Alert.Title>Upload Error</Alert.Title>
-                        <Alert.Description>
-                          <Text size="sm">
-                            {errorMessages[
-                              fileUpload().rejectedFiles[0].errors[0]
-                            ] ||
-                              `Unknown error: ${fileUpload().rejectedFiles[0].errors[0]}`}
-                          </Text>
-                        </Alert.Description>
-                      </Alert.Content>
-                    </Alert.Root>
+                  <Show when={fileUpload().rejectedFiles[0]?.errors[0]} keyed>
+                    {(error) => (
+                      <Alert.Root my="3">
+                        <Alert.Icon
+                          asChild={(iconProps) => (
+                            <CircleAlertIcon size={18} {...iconProps()} />
+                          )}
+                        />
+                        <Alert.Content>
+                          <Alert.Title>Upload Error</Alert.Title>
+                          <Alert.Description>
+                            <Text size="sm">
+                              {errorMessages[error] ||
+                                `Unknown error: ${error}`}
+                            </Text>
+                          </Alert.Description>
+                        </Alert.Content>
+                      </Alert.Root>
+                    )}
                   </Show>
                 )}
               </ParkFileUpload.Context>

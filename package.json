@@ -29,27 +29,28 @@
     "zip:firefox": "wxt zip -b firefox --mv3 && cp .output/extension-firefox.zip extension-firefox.zip",
     "zip:edge": "wxt zip -b edge --mv3 && cp .output/extension-edge.zip extension-edge.zip",
     "zip:all": "wxt zip --mv3 && wxt zip -b firefox --mv3 && wxt zip -b edge --mv3 && cp .output/extension-chrome.zip extension-chrome.zip && cp .output/extension-firefox.zip extension-firefox.zip && cp .output/extension-edge.zip extension-edge.zip",
-    "parkui:add": "npx @park-ui/cli components add",
-    "parkui:update": "npx @park-ui/cli components add button alert spinner dialog drawer icon-button input menu text toast tooltip accordion switch slider color-picker file-upload number-input radio-button-group",
+    "parkui:add": "park-ui add",
+    "parkui:update": "park-ui add button alert dialog drawer icon-button input menu text tooltip switch slider color-picker file-upload number-input",
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "@pandacss/dev": "1.4.3",
+    "@pandacss/dev": "1.12.0",
+    "@park-ui/cli": "1.0.1",
     "@park-ui/panda-preset": "0.43.1",
-    "@types/chrome": "0.1.24",
+    "@types/chrome": "0.2.7",
     "@wxt-dev/module-solid": "1.1.4",
-    "prettier": "3.6.2",
-    "sass-embedded": "1.93.2",
-    "typescript": "5.9.3",
-    "vite": "7.1.11",
-    "vite-plugin-solid": "2.11.9",
-    "wxt": "0.20.11"
+    "prettier": "3.9.6",
+    "sass-embedded": "1.103.1",
+    "typescript": "7.0.2",
+    "vite": "8.2.2",
+    "vite-plugin-solid": "2.11.14",
+    "wxt": "0.21.4"
   },
   "dependencies": {
-    "@ark-ui/solid": "5.26.2",
-    "caniuse-lite": "1.0.30001751",
-    "lucide-solid": "0.546.0",
+    "@ark-ui/solid": "5.39.0",
+    "caniuse-lite": "1.0.30001809",
+    "lucide-solid": "1.33.0",
     "solid-dnd-directive": "0.2.0",
-    "solid-js": "1.9.9"
+    "solid-js": "1.9.15"
   }
 }
