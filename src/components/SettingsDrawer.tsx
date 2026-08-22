@@ -269,7 +269,7 @@ export const SettingsDrawer = () => {
 
             <div>
               <SettingItemTitle
-                title="Dial radius"
+                title="Dial corner radius"
                 showReset
                 onReset={() => resetSetting("dialRadius")}
               />

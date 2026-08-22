@@ -48,6 +48,7 @@ export default defineBackground(() => {
         title: "Add to Speed Dials",
         id: "addToSpeedDials",
         contexts: ["all"],
+        // TODO: we want it for all url except for the extension's own pages
         documentUrlPatterns: ["<all_urls>"],
       })
     })

@@ -9,7 +9,7 @@ export type BookmarkDataType = Browser.bookmarks.BookmarkTreeNode
 const IS_DEV = import.meta.env.MODE === "development"
 
 const DEFAULT_SPEED_DIALS_FOLDER_NAME = IS_DEV
-  ? "NICE_SPEED_DIALS_BOOKMARKS_[DO_NOT_DELETE]_DEV"
+  ? "DEV_NICE_SPEED_DIALS_BOOKMARKS_[DO_NOT_DELETE]"
   : "NICE_SPEED_DIALS_BOOKMARKS_[DO_NOT_DELETE]"
 const BOOKMARK_EVENTS = [
   "onChanged",
