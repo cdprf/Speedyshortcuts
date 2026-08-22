@@ -34,6 +34,9 @@ Try Nice Speed Dials today and streamline your browsing experience!
 
 - Sleek and intuitive interface
 - Create and organize speed dials
+- Create folders and organize speed dials in nested folder hierarchies
+- Navigate folders with a clickable breadcrumb path
+- Choose searchable Lucide icons for folders
 - Access speed dials from any new tab
 - Speed dials are stored in your browser bookmarks
 - Sync speed dials across multiple devices (if your browser sync is on)
@@ -45,7 +48,6 @@ Try Nice Speed Dials today and streamline your browsing experience!
 ### Future Plan:
 
 - Import and export speed dials
-- Support for folders
 - Better Keyboard accessibility
 - More features to come!
 

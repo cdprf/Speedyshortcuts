@@ -9,10 +9,10 @@ export const getGridDimensions = (
 
   if (customColumns !== undefined) {
     gridWidth = customColumns
-    gridHeight = Math.ceil(listLength / gridWidth)
+    gridHeight = Math.max(1, Math.ceil(listLength / gridWidth))
   } else {
-    gridWidth = Math.ceil(Math.sqrt(listLength))
-    gridHeight = Math.ceil(listLength / gridWidth)
+    gridWidth = Math.max(1, Math.ceil(Math.sqrt(listLength)))
+    gridHeight = Math.max(1, Math.ceil(listLength / gridWidth))
   }
 
   for (let i = 0; i < gridHeight; i++) {

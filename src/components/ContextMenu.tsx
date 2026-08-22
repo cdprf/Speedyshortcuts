@@ -27,6 +27,22 @@ export const ContextMenu = (props: P) => {
     setOpen((open) => !open)
   }
 
+  const openFolderLinks = async () => {
+    const [folder] = await browser.bookmarks.getSubTree(props.item.id)
+
+    const openChildren = (children?: BookmarkDataType[]) => {
+      children?.forEach((child) => {
+        if (child.url) {
+          browser.tabs.create({ url: child.url, active: false })
+        } else {
+          openChildren(child.children)
+        }
+      })
+    }
+
+    openChildren(folder?.children)
+  }
+
   return (
     <Menu.Root
       lazyMount
@@ -47,20 +63,11 @@ export const ContextMenu = (props: P) => {
               <Menu.Item
                 id="open_in_new_tab"
                 value="open_in_new_tab"
-                onClick={() => {
-                  browser.bookmarks
-                    .getChildren(props.item.id)
-                    .then((children) => {
-                      children?.forEach((child) => {
-                        child?.url &&
-                          browser.tabs.create({ url: child.url, active: false })
-                      })
-                    })
-                }}
+                onClick={openFolderLinks}
               >
                 <HStack>
                   <FileStackIcon size={16} />
-                  Open all in new tab
+                  Open all in new tabs
                 </HStack>
               </Menu.Item>
             )}

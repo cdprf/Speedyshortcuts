@@ -1,10 +1,14 @@
-import { createSignal } from "solid-js"
+import { createMemo, createSignal } from "solid-js"
 import { isUrlValid } from "~/utils"
 import {
   addNewSpeedDial,
   type BookmarkDataType,
+  currentFolder,
+  DEFAULT_FOLDER_ICON,
   deleteSpeedDial,
   editSpeedDial,
+  getFolderIcon,
+  type SpeedDialValues,
 } from "./"
 
 export type ModalType = {
@@ -14,7 +18,9 @@ export type ModalType = {
   description: string
 }
 
-export type ModalDataType = Partial<BookmarkDataType>
+export type SpeedDialKind = "bookmark" | "folder"
+
+export type ModalDataType = SpeedDialValues & { kind?: SpeedDialKind }
 
 export const MODAL_TYPES = {
   ADD: {
@@ -42,10 +48,18 @@ export type ModalTypes = keyof typeof MODAL_TYPES
 export const isValid = (type?: ModalTypes, data?: ModalDataType) => {
   if (type === "DELETE") {
     return !!data?.id
-  } else if (type === "EDIT") {
-    return !!(data?.id && data?.title && data?.url && isUrlValid(data?.url))
-  } else if (type === "ADD") {
-    return !!(data?.title && data?.url && isUrlValid(data?.url))
+  } else if (type === "EDIT" || type === "ADD") {
+    const hasRequiredIdentity = type === "EDIT" ? !!data?.id : true
+    const isFolder = data?.kind === "folder"
+
+    if (isFolder) return !!(hasRequiredIdentity && data?.title?.trim())
+
+    return !!(
+      hasRequiredIdentity &&
+      data?.title?.trim() &&
+      data?.url &&
+      isUrlValid(data.url)
+    )
   }
   return false
 }
@@ -53,11 +67,23 @@ export const isValid = (type?: ModalTypes, data?: ModalDataType) => {
 const [isModalOpen, setIsModalOpen] = createSignal(false)
 const [modalType, setModalType] = createSignal<ModalType>()
 const [modalData, setModalData] = createSignal<ModalDataType>()
+const modalItemKind = createMemo<SpeedDialKind>(
+  () => modalData()?.kind ?? "bookmark"
+)
 
 const openModal = (type: ModalTypes, data?: BookmarkDataType) => {
   setIsModalOpen(true)
   setModalType(MODAL_TYPES[type])
-  if (data) setModalData(data)
+  setModalData(
+    data
+      ? {
+          ...data,
+          parentId: data.parentId ?? currentFolder()?.id,
+          kind: data.url ? "bookmark" : "folder",
+          ...(!data.url ? { icon: getFolderIcon(data.id) } : {}),
+        }
+      : { kind: "bookmark", parentId: currentFolder()?.id }
+  )
 }
 
 const closeModal = () => {
@@ -68,6 +94,24 @@ const closeModal = () => {
 const handleModalDataChange = (e: Event) => {
   const { name, value = "" } = e.target as HTMLInputElement
   setModalData((s) => ({ ...s, [name]: value }))
+}
+
+const setModalItemKind = (kind: SpeedDialKind) => {
+  setModalData((data) => ({
+    ...data,
+    kind,
+    ...(kind === "folder"
+      ? { url: undefined, icon: data?.icon ?? DEFAULT_FOLDER_ICON }
+      : {}),
+  }))
+}
+
+const setModalFolderIcon = (icon: string) => {
+  setModalData((data) => ({ ...data, icon }))
+}
+
+const setModalParentFolder = (parentId: string) => {
+  setModalData((data) => ({ ...data, parentId }))
 }
 
 const handleModalOnSubmit = () => {
@@ -88,10 +132,14 @@ const handleModalOnSubmit = () => {
 export {
   modalType,
   modalData,
+  modalItemKind,
   openModal,
   closeModal,
   isModalOpen,
   setIsModalOpen,
   handleModalOnSubmit,
   handleModalDataChange,
+  setModalItemKind,
+  setModalFolderIcon,
+  setModalParentFolder,
 }

@@ -3,8 +3,14 @@ import { createStore } from "solid-js/store"
 // import { notify } from '~/components/Toast'
 import { getGridDimensions } from "~/utils"
 import { type Browser, browser } from "wxt/browser"
+import {
+  getFolderIcon,
+  removeFolderIcons,
+  setFolderIcon,
+} from "./useFolderIcons"
 
 export type BookmarkDataType = Browser.bookmarks.BookmarkTreeNode
+export type SpeedDialValues = Partial<BookmarkDataType> & { icon?: string }
 
 const IS_DEV = import.meta.env.MODE === "development"
 
@@ -35,6 +41,13 @@ export const SETTINGS_SPEED_DIALS_ITEM: BookmarkDataType = {
 
 const [defaultSpeedDialsFolder, setDefaultSpeedDialsFolder] =
   createSignal<BookmarkDataType>()
+const [currentFolder, setCurrentFolder] = createSignal<BookmarkDataType>()
+const [folderPath, setFolderPath] = createSignal<BookmarkDataType[]>([])
+const [folderTree, setFolderTree] = createSignal<BookmarkDataType>()
+
+const hasFolders = createMemo(
+  () => folderTree()?.children?.some((child) => !child.url) ?? false
+)
 
 const [speedDials, setSpeedDials] = createStore<BookmarkDataType[]>([])
 
@@ -54,14 +67,22 @@ const createDefaultSpeedDialsFolder = async () => {
 }
 
 const getDefaultSpeedDialsFolder = async () => {
-  if (defaultSpeedDialsFolder()) return defaultSpeedDialsFolder()!
+  const cachedFolder = defaultSpeedDialsFolder()
+
+  if (cachedFolder) {
+    try {
+      const [folder] = await browser.bookmarks.get(cachedFolder.id)
+      if (folder && !folder.url) return folder
+    } catch {
+      setDefaultSpeedDialsFolder(undefined)
+    }
+  }
 
   const results = await browser.bookmarks.search({
     title: DEFAULT_SPEED_DIALS_FOLDER_NAME,
   })
 
   if (results && results.length > 0) {
-    // Find the folder (bookmark without URL property)
     const defaultFolder = results.find((bookmark) => !bookmark.url)
     if (defaultFolder) {
       setDefaultSpeedDialsFolder(defaultFolder)
@@ -69,138 +90,217 @@ const getDefaultSpeedDialsFolder = async () => {
     }
   }
 
-  // If not found, create it
   return await createDefaultSpeedDialsFolder()
 }
 
-const getSpeedDials = async () => {
-  let defaultFolder = defaultSpeedDialsFolder()
+const getFolderPath = async (folderId: string, root: BookmarkDataType) => {
+  const path: BookmarkDataType[] = []
+  const visitedIds = new Set<string>()
+  let nextId: string | undefined = folderId
 
-  if (!defaultFolder) {
-    // Try to find or create the folder using search
-    defaultFolder = await getDefaultSpeedDialsFolder()
-  } else {
-    // Verify the folder still exists
-    try {
-      const [verification] = await browser.bookmarks.get(defaultFolder.id)
-      if (!verification) {
-        // Folder was deleted, search for it again or create new one
-        defaultFolder = await getDefaultSpeedDialsFolder()
-      }
-    } catch (error) {
-      // Folder might have been deleted, search for it again or create new one
-      defaultFolder = await getDefaultSpeedDialsFolder()
+  try {
+    while (nextId && !visitedIds.has(nextId)) {
+      visitedIds.add(nextId)
+      const folders: BookmarkDataType[] = await browser.bookmarks.get(nextId)
+      const folder: BookmarkDataType | undefined = folders[0]
+
+      if (!folder || folder.url) break
+
+      path.unshift(folder)
+      if (folder.id === root.id) return path
+      nextId = folder.parentId
     }
+  } catch {
+    // The folder or one of its ancestors may have been removed externally.
   }
 
-  if (defaultFolder) {
-    const children = await browser.bookmarks.getChildren(defaultFolder.id)
-    setSpeedDials(children)
+  return [root]
+}
+
+const refreshFolderTree = async (root: BookmarkDataType) => {
+  try {
+    const [tree] = await browser.bookmarks.getSubTree(root.id)
+    setFolderTree(tree ?? root)
+  } catch {
+    setFolderTree(root)
   }
+}
+
+const getSpeedDials = async (folderId?: string) => {
+  const root = await getDefaultSpeedDialsFolder()
+  const requestedFolderId = folderId ?? currentFolder()?.id ?? root.id
+  const nextPath = await getFolderPath(requestedFolderId, root)
+  const nextFolder = nextPath.at(-1) ?? root
+
+  setCurrentFolder(nextFolder)
+  setFolderPath(nextPath)
+  await refreshFolderTree(root)
+
+  try {
+    const children = await browser.bookmarks.getChildren(nextFolder.id)
+    setSpeedDials(children)
+  } catch {
+    setCurrentFolder(root)
+    setFolderPath([root])
+    setSpeedDials(await browser.bookmarks.getChildren(root.id))
+  }
+}
+
+const openFolder = async (folder: BookmarkDataType) => {
+  if (folder.url) return
+  await getSpeedDials(folder.id)
+}
+
+const navigateToFolder = async (folderId: string) => {
+  await getSpeedDials(folderId)
+}
+
+const navigateToParentFolder = async () => {
+  const path = folderPath()
+  const parent = path.at(-2)
+  if (parent) await getSpeedDials(parent.id)
+}
+
+const handleBookmarkChange = () => {
+  void getSpeedDials()
 }
 
 const bookmarkEventListeners = () =>
   BOOKMARK_EVENTS.forEach((event) =>
-    browser.bookmarks[event].addListener(getSpeedDials)
+    browser.bookmarks[event].addListener(handleBookmarkChange)
   )
 
 const removeBookmarkEventListeners = () =>
   BOOKMARK_EVENTS.forEach((event) =>
-    browser.bookmarks[event].removeListener(getSpeedDials)
+    browser.bookmarks[event].removeListener(handleBookmarkChange)
   )
 
-const addNewSpeedDial = async (values?: Partial<BookmarkDataType>) => {
-  if (!values?.title || !values?.url) return // maybe will add validation later
+const addNewSpeedDial = async (values?: SpeedDialValues, parentId?: string) => {
+  const title = values?.title?.trim()
+  const url = values?.url
+  const icon = values?.icon
+  if (!title) return
 
-  const defaultFolder = await getDefaultSpeedDialsFolder()
+  const root = await getDefaultSpeedDialsFolder()
+  const destinationId =
+    values?.parentId ?? parentId ?? currentFolder()?.id ?? root.id
 
-  await browser.bookmarks
-    .create({
-      parentId: defaultFolder.id,
-      title: values?.title,
-      url: values?.url,
+  try {
+    const created = await browser.bookmarks.create({
+      parentId: destinationId,
+      title,
+      ...(url ? { url } : {}),
     })
-    .then((bookmark) => {
-      // notify().success({
-      //   title: 'Success!',
-      //   description: `${bookmark.title} added successfully!`,
-      // })
-    })
-    .catch((error) => {
-      // notify().error({ title: 'Error!!', description: error.message })
-    })
+
+    if (!url) await setFolderIcon(created.id, icon)
+  } catch (error) {
+    // notify().error({ title: 'Error!!', description: error.message })
+    console.error("Unable to create speed dial", error)
+  }
 }
 
-const editSpeedDial = async (values?: Partial<BookmarkDataType>) => {
-  if (!values?.id || !values?.title || !values?.url) return // maybe will add validation later
+const editSpeedDial = async (values?: SpeedDialValues) => {
+  const title = values?.title?.trim()
+  const id = values?.id
+  const url = values?.url
+  const icon = values?.icon
+  if (!id || !title) return
 
-  await browser.bookmarks
-    .update(values?.id, { title: values?.title, url: values?.url })
-    .then((bookmark) => {
-      // notify().success({
-      //   title: 'Success!',
-      //   description: `${bookmark.title} edited successfully!`,
-      // })
-    })
-    .catch((error) => {
-      // notify().error({ title: 'Error!!', description: error.message })
-    })
+  try {
+    const [current] = await browser.bookmarks.get(id)
+    await browser.bookmarks.update(id, { title, ...(url ? { url } : {}) })
+
+    if (values?.parentId && current?.parentId !== values.parentId) {
+      await browser.bookmarks.move(id, { parentId: values.parentId })
+    }
+
+    if (!url) await setFolderIcon(id, icon)
+  } catch (error) {
+    // notify().error({ title: 'Error!!', description: error.message })
+    console.error("Unable to edit speed dial", error)
+  }
 }
 
-const deleteSpeedDial = async (values?: Partial<BookmarkDataType>) => {
-  if (!values?.id) return // maybe will add validation later
+const getFolderIds = (node?: BookmarkDataType): string[] => {
+  if (!node || node.url) return []
+  return [
+    node.id,
+    ...(node.children?.flatMap((child) => getFolderIds(child)) ?? []),
+  ]
+}
 
-  await browser.bookmarks
-    .remove(values?.id)
-    .then(() => {
-      // notify().success({
-      //   title: 'Success!',
-      //   description: 'Speed dial deleted successfully!',
-      // })
-    })
-    .catch((error) => {
-      // notify().error({ title: 'Error!!', description: error.message })
-    })
+const deleteSpeedDial = async (values?: SpeedDialValues) => {
+  const id = values?.id
+  const url = values?.url
+  if (!id) return
+
+  try {
+    const folderIds = url
+      ? []
+      : getFolderIds((await browser.bookmarks.getSubTree(id))[0])
+
+    if (url) {
+      await browser.bookmarks.remove(id)
+    } else {
+      await browser.bookmarks.removeTree(id)
+      await removeFolderIcons(folderIds)
+    }
+  } catch (error) {
+    // notify().error({ title: 'Error!!', description: error.message })
+    console.error("Unable to delete speed dial", error)
+  }
+}
+
+const copyBookmarkTree = async (
+  source: BookmarkDataType,
+  parentId: string,
+  title = source.title
+) => {
+  const copy = await browser.bookmarks.create({
+    parentId,
+    title,
+    ...(source.url ? { url: source.url } : {}),
+  })
+
+  if (!source.url) {
+    await setFolderIcon(copy.id, getFolderIcon(source.id))
+    const children = await browser.bookmarks.getChildren(source.id)
+    for (const child of children) {
+      await copyBookmarkTree(child, copy.id)
+    }
+  }
+
+  return copy
 }
 
 const duplicateSpeedDial = async (values?: Partial<BookmarkDataType>) => {
-  if (!values?.title || !values?.url) return // maybe will add validation later
+  if (!values?.id || !values.title) return
 
-  const defaultFolder = await getDefaultSpeedDialsFolder()
+  const root = await getDefaultSpeedDialsFolder()
+  const destinationId = values.parentId ?? currentFolder()?.id ?? root.id
 
-  await browser.bookmarks
-    .create({
-      parentId: defaultFolder.id,
-      title: values?.title + " (copy)",
-      url: values?.url,
-    })
-    .then((bookmark) => {
-      // notify().success({
-      //   title: 'Success!',
-      //   description: `${bookmark.title} duplicated successfully!`,
-      // })
-    })
-    .catch((error) => {
-      // notify().error({ title: 'Error!!', description: error.message })
-    })
+  try {
+    const [source] = await browser.bookmarks.get(values.id)
+    if (source) {
+      await copyBookmarkTree(source, destinationId, `${source.title} (copy)`)
+    }
+  } catch (error) {
+    // notify().error({ title: 'Error!!', description: error.message })
+    console.error("Unable to duplicate speed dial", error)
+  }
 }
 
 const moveSpeedDial = async (
   values: Partial<BookmarkDataType>,
   newIndex: number
 ) => {
-  if (!values?.id) return // maybe will add validation later
+  if (!values?.id) return
   if (values?.index === newIndex) return getSpeedDials()
   await browser.bookmarks
-    .move(values?.id, { index: newIndex })
-    .then((bookmark) => {
-      // notify().success({
-      //   title: 'Success!',
-      //   description: `${bookmark.title} reordered successfully!`,
-      // })
-    })
+    .move(values.id, { index: newIndex })
     .catch((error) => {
       // notify().error({ title: 'Error!!', description: error.message })
+      console.error("Unable to move speed dial", error)
     })
 }
 
@@ -213,6 +313,13 @@ createEffect(() => {
 export {
   speedDials,
   setSpeedDials,
+  currentFolder,
+  folderPath,
+  folderTree,
+  hasFolders,
+  openFolder,
+  navigateToFolder,
+  navigateToParentFolder,
   editSpeedDial,
   moveSpeedDial,
   speedDialsGrid,

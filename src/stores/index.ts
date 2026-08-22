@@ -1,3 +1,4 @@
 export * from "./useSpeedDials"
 export * from "./useModal"
 export * from "./useSettings"
+export * from "./useFolderIcons"

@@ -1,10 +1,11 @@
-import { PlusIcon, SettingsIcon } from "lucide-solid"
+import { FolderOpenIcon, PlusIcon, SettingsIcon } from "lucide-solid"
 // @ts-expect-error ts(2307)
 import { dndzone } from "solid-dnd-directive"
 import { For, createSignal, createEffect, onMount, Show } from "solid-js"
 import {
   type BookmarkDataType,
   duplicateSpeedDial,
+  openFolder,
   moveSpeedDial,
   openModal,
   setSpeedDials,
@@ -26,6 +27,9 @@ import { token } from "styled-system/tokens"
 import { HStack } from "styled-system/jsx"
 import { IconButton } from "./ui/icon-button"
 import { CustomTooltip } from "./CustomTooltip"
+import { Button } from "./ui/button"
+import { Text } from "./ui/text"
+import { FolderBreadcrumb } from "./FolderBreadcrumb"
 
 export const Grid = () => {
   dndzone
@@ -130,75 +134,95 @@ export const Grid = () => {
       <InputModal />
       <SettingsDrawer />
 
-      <HStack
-        alignItems="flex-start"
-        justifyContent="flex-end"
-        alignSelf="flex-start"
-        gap={2}
-        width="100%"
-      >
-        <Show when={currentShowAddNew()}>
-          <CustomTooltip content="Add New">
-            <IconButton variant="outline" onClick={() => openModal("ADD")}>
-              <PlusIcon size={20} />
-            </IconButton>
-          </CustomTooltip>
-        </Show>
+      <div class={classes.toolbar}>
+        <FolderBreadcrumb />
 
-        <Show when={currentShowSettings()}>
-          <CustomTooltip content="Settings">
-            <IconButton
-              variant="outline"
-              onClick={() => setIsSettingDrawerOpen(true)}
-            >
-              <SettingsIcon size={20} />
-            </IconButton>
-          </CustomTooltip>
-        </Show>
+        <HStack gap={2} flexShrink={0} marginLeft="auto">
+          <Show when={currentShowAddNew()}>
+            <CustomTooltip content="Add New">
+              <IconButton variant="outline" onClick={() => openModal("ADD")}>
+                <PlusIcon size={20} />
+              </IconButton>
+            </CustomTooltip>
+          </Show>
 
-        {/* <Show when={currentShowHelp()}>
-          <CustomTooltip content="Help">
-            <Button
-              variant="outline"
-              // open help link
-            >
-              <CircleQuestionMarkIcon size={20} />
-              Help
-            </Button>
-          </CustomTooltip>
-        </Show> */}
-      </HStack>
+          <Show when={currentShowSettings()}>
+            <CustomTooltip content="Settings">
+              <IconButton
+                variant="outline"
+                onClick={() => setIsSettingDrawerOpen(true)}
+              >
+                <SettingsIcon size={20} />
+              </IconButton>
+            </CustomTooltip>
+          </Show>
 
-      <div
-        class={classes.grid}
-        style={{
-          "--grid-width": gridDimensions().width.toString(),
-          "--grid-height": gridDimensions().height.toString(),
-        }}
-        // @ts-expect-error ts(2322)
-        use:dndzone={{
-          items: () => speedDials,
-          flipDurationMs: 150,
-          dragDisabled: currentDisableDragDrop,
-          centreDraggedOnCursor: true,
-          dropTargetStyle: {
-            outline: "2px dashed var(--colors-gray-a6)",
-            borderRadius: "4px",
-          },
-        }}
-        on:consider={onDragConsider}
-        on:finalize={onDragFinalize}
-      >
-        <For each={speedDials}>
-          {(item) => (
-            <GridItem
-              item={item}
-              openModal={openModal}
-              duplicateSpeedDial={duplicateSpeedDial}
-            />
-          )}
-        </For>
+          {/* <Show when={currentShowHelp()}>
+            <CustomTooltip content="Help">
+              <Button
+                variant="outline"
+                // open help link
+              >
+                <CircleQuestionMarkIcon size={20} />
+                Help
+              </Button>
+            </CustomTooltip>
+          </Show> */}
+        </HStack>
       </div>
+
+      <Show
+        when={speedDials.length > 0}
+        fallback={
+          <div class={classes.emptyState}>
+            <div class={classes.emptyStateIcon}>
+              <FolderOpenIcon size={28} />
+            </div>
+            <Text fontSize="lg" fontWeight="semibold">
+              This folder is empty
+            </Text>
+            <Text fontSize="sm" color="fg.muted">
+              Add a speed dial or create another folder here.
+            </Text>
+            <Button mt={2} onClick={() => openModal("ADD")}>
+              <PlusIcon size={18} />
+              Add an item
+            </Button>
+          </div>
+        }
+      >
+        <div
+          class={classes.grid}
+          style={{
+            "--grid-width": gridDimensions().width.toString(),
+            "--grid-height": gridDimensions().height.toString(),
+          }}
+          // @ts-expect-error ts(2322)
+          use:dndzone={{
+            items: () => speedDials,
+            flipDurationMs: 150,
+            dragDisabled: currentDisableDragDrop,
+            centreDraggedOnCursor: true,
+            dropTargetStyle: {
+              outline: "2px dashed var(--colors-gray-a6)",
+              borderRadius: "4px",
+            },
+          }}
+          on:consider={onDragConsider}
+          on:finalize={onDragFinalize}
+        >
+          <For each={speedDials}>
+            {(item) => (
+              <GridItem
+                item={item}
+                openModal={openModal}
+                duplicateSpeedDial={duplicateSpeedDial}
+                openFolder={openFolder}
+              />
+            )}
+          </For>
+        </div>
+      </Show>
     </>
   )
 }
