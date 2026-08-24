@@ -44,6 +44,7 @@ const [defaultSpeedDialsFolder, setDefaultSpeedDialsFolder] =
 const [currentFolder, setCurrentFolder] = createSignal<BookmarkDataType>()
 const [folderPath, setFolderPath] = createSignal<BookmarkDataType[]>([])
 const [folderTree, setFolderTree] = createSignal<BookmarkDataType>()
+const [isSpeedDialsLoaded, setIsSpeedDialsLoaded] = createSignal(false)
 
 const hasFolders = createMemo(
   () => folderTree()?.children?.some((child) => !child.url) ?? false
@@ -305,7 +306,13 @@ const moveSpeedDial = async (
 }
 
 createEffect(() => {
-  getSpeedDials()
+  void getSpeedDials()
+    .catch((error) => {
+      console.error("Unable to load speed dials", error)
+    })
+    .finally(() => {
+      setIsSpeedDialsLoaded(true)
+    })
   bookmarkEventListeners()
   onCleanup(removeBookmarkEventListeners)
 })
@@ -317,6 +324,7 @@ export {
   folderPath,
   folderTree,
   hasFolders,
+  isSpeedDialsLoaded,
   openFolder,
   navigateToFolder,
   navigateToParentFolder,

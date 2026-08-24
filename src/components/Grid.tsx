@@ -11,6 +11,7 @@ import {
   setSpeedDials,
   speedDials,
   setIsSettingDrawerOpen,
+  isSpeedDialsLoaded,
   gridColumns,
   dialSize,
   dialRadius,
@@ -176,58 +177,60 @@ export const Grid = () => {
         </HStack>
       </div>
 
-      <Show
-        when={speedDials.length > 0}
-        fallback={
-          <div class={classes.emptyState}>
-            <div class={classes.emptyStateIcon}>
-              <FolderOpenIcon size={28} />
+      <Show when={isSpeedDialsLoaded()}>
+        <Show
+          when={speedDials.length > 0}
+          fallback={
+            <div class={classes.emptyState}>
+              <div class={classes.emptyStateIcon}>
+                <FolderOpenIcon size={28} />
+              </div>
+              <Text fontSize="lg" fontWeight="semibold">
+                This folder is empty
+              </Text>
+              <Text fontSize="sm" color="fg.muted">
+                Add a speed dial or create another folder here.
+              </Text>
+              <Button mt={2} onClick={() => openModal("ADD")}>
+                <PlusIcon size={18} />
+                Add an item
+              </Button>
             </div>
-            <Text fontSize="lg" fontWeight="semibold">
-              This folder is empty
-            </Text>
-            <Text fontSize="sm" color="fg.muted">
-              Add a speed dial or create another folder here.
-            </Text>
-            <Button mt={2} onClick={() => openModal("ADD")}>
-              <PlusIcon size={18} />
-              Add an item
-            </Button>
-          </div>
-        }
-      >
-        <div
-          class={classes.grid}
-          style={{
-            "--grid-width": gridDimensions().width.toString(),
-            "--grid-height": gridDimensions().height.toString(),
-          }}
-          // @ts-expect-error ts(2322)
-          use:dndzone={{
-            items: () => speedDials,
-            flipDurationMs: 150,
-            dragDisabled: currentDisableDragDrop,
-            centreDraggedOnCursor: true,
-            dropTargetStyle: {
-              outline: "2px dashed var(--colors-gray-a6)",
-              borderRadius: "4px",
-            },
-          }}
-          on:consider={onDragConsider}
-          on:finalize={onDragFinalize}
+          }
         >
-          <For each={speedDials}>
-            {(item) => (
-              <GridItem
-                item={item}
-                openModal={openModal}
-                duplicateSpeedDial={duplicateSpeedDial}
-                openFolder={openFolder}
-                showTitle={currentShowSpeedDialTitles()}
-              />
-            )}
-          </For>
-        </div>
+          <div
+            class={classes.grid}
+            style={{
+              "--grid-width": gridDimensions().width.toString(),
+              "--grid-height": gridDimensions().height.toString(),
+            }}
+            // @ts-expect-error ts(2322)
+            use:dndzone={{
+              items: () => speedDials,
+              flipDurationMs: 150,
+              dragDisabled: currentDisableDragDrop,
+              centreDraggedOnCursor: true,
+              dropTargetStyle: {
+                outline: "2px dashed var(--colors-gray-a6)",
+                borderRadius: "4px",
+              },
+            }}
+            on:consider={onDragConsider}
+            on:finalize={onDragFinalize}
+          >
+            <For each={speedDials}>
+              {(item) => (
+                <GridItem
+                  item={item}
+                  openModal={openModal}
+                  duplicateSpeedDial={duplicateSpeedDial}
+                  openFolder={openFolder}
+                  showTitle={currentShowSpeedDialTitles()}
+                />
+              )}
+            </For>
+          </div>
+        </Show>
       </Show>
     </>
   )
