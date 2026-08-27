@@ -1,7 +1,34 @@
-import { Index, type JSX, Show, children, splitProps } from "solid-js"
-import * as StyledSlider from "./styled/slider"
+import {
+  Slider as ArkSlider,
+  SliderContext,
+  SliderHiddenInput,
+} from "@ark-ui/solid"
+import {
+  Index,
+  type ComponentProps,
+  type JSX,
+  Show,
+  children,
+  splitProps,
+} from "solid-js"
+import { withClass } from "~/utils/with-class"
 
-export interface SliderProps extends StyledSlider.RootProps {
+const Root = withClass(ArkSlider.Root, "slider__root")
+const Control = withClass(
+  ArkSlider.Control,
+  "slider__control slider__control--size_md"
+)
+const Label = withClass(ArkSlider.Label, "slider__label slider__label--size_md")
+const MarkerGroup = withClass(ArkSlider.MarkerGroup, "slider__markerGroup")
+const Marker = withClass(
+  ArkSlider.Marker,
+  "slider__marker slider__marker--size_md"
+)
+const Range = withClass(ArkSlider.Range, "slider__range slider__range--size_md")
+const Thumb = withClass(ArkSlider.Thumb, "slider__thumb slider__thumb--size_md")
+const Track = withClass(ArkSlider.Track, "slider__track slider__track--size_md")
+
+export type SliderProps = ComponentProps<typeof Root> & {
   marks?: { value: number; label?: JSX.Element }[]
 }
 
@@ -10,39 +37,37 @@ export const Slider = (props: SliderProps) => {
   const getChildren = children(() => localProps.children)
 
   return (
-    <StyledSlider.Root {...rootProps}>
-      <StyledSlider.Context>
+    <Root {...rootProps}>
+      <SliderContext>
         {(slider) => (
           <>
             <Show when={getChildren()}>
-              <StyledSlider.Label>{getChildren()}</StyledSlider.Label>
+              <Label>{getChildren()}</Label>
             </Show>
-            <StyledSlider.Control>
-              <StyledSlider.Track>
-                <StyledSlider.Range />
-              </StyledSlider.Track>
+            <Control>
+              <Track>
+                <Range />
+              </Track>
               <Index each={slider().value}>
                 {(_, index) => (
-                  <StyledSlider.Thumb index={index}>
-                    <StyledSlider.HiddenInput />
-                  </StyledSlider.Thumb>
+                  <Thumb index={index}>
+                    <SliderHiddenInput />
+                  </Thumb>
                 )}
               </Index>
-            </StyledSlider.Control>
+            </Control>
             <Show when={localProps.marks}>
-              <StyledSlider.MarkerGroup>
+              <MarkerGroup>
                 <Index each={localProps.marks}>
                   {(mark) => (
-                    <StyledSlider.Marker value={mark().value}>
-                      {mark().label}
-                    </StyledSlider.Marker>
+                    <Marker value={mark().value}>{mark().label}</Marker>
                   )}
                 </Index>
-              </StyledSlider.MarkerGroup>
+              </MarkerGroup>
             </Show>
           </>
         )}
-      </StyledSlider.Context>
-    </StyledSlider.Root>
+      </SliderContext>
+    </Root>
   )
 }

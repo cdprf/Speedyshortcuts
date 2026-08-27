@@ -1,12 +1,13 @@
-import { PipetteIcon } from "lucide-solid"
 import { For } from "solid-js"
-import { HStack, Stack } from "styled-system/jsx"
-import { ColorPicker as ParkColorPicker } from "~/components/ui/color-picker"
+import {
+  ColorPicker as ParkColorPicker,
+  type ColorPickerRootProps,
+} from "~/components/ui/color-picker"
 import { IconButton } from "~/components/ui/icon-button"
 import { Input } from "~/components/ui/input"
 import { Text } from "~/components/ui/text"
 
-export const ColorPicker = (props: ParkColorPicker.RootProps) => {
+export const ColorPicker = (props: ColorPickerRootProps) => {
   return (
     <ParkColorPicker.Root {...props}>
       <ParkColorPicker.Context>
@@ -28,12 +29,12 @@ export const ColorPicker = (props: ParkColorPicker.RootProps) => {
             </ParkColorPicker.Control>
             <ParkColorPicker.Positioner>
               <ParkColorPicker.Content>
-                <Stack gap="3">
+                <div class="flex flex-col gap-3">
                   <ParkColorPicker.Area>
                     <ParkColorPicker.AreaBackground />
                     <ParkColorPicker.AreaThumb />
                   </ParkColorPicker.Area>
-                  <HStack gap="3">
+                  <div class="flex items-center gap-3">
                     {/* <ParkColorPicker.EyeDropperTrigger
                       asChild={(triggerProps) => (
                         <IconButton
@@ -46,7 +47,7 @@ export const ColorPicker = (props: ParkColorPicker.RootProps) => {
                         </IconButton>
                       )}
                     /> */}
-                    <Stack gap="2" flex="1">
+                    <div class="flex flex-1 flex-col gap-2">
                       <ParkColorPicker.ChannelSlider channel="hue">
                         <ParkColorPicker.ChannelSliderTrack />
                         <ParkColorPicker.ChannelSliderThumb />
@@ -56,9 +57,9 @@ export const ColorPicker = (props: ParkColorPicker.RootProps) => {
                         <ParkColorPicker.ChannelSliderTrack />
                         <ParkColorPicker.ChannelSliderThumb />
                       </ParkColorPicker.ChannelSlider>
-                    </Stack>
-                  </HStack>
-                  <HStack>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-2">
                     <ParkColorPicker.ChannelInput
                       channel="hex"
                       asChild={(inputProps) => (
@@ -71,9 +72,9 @@ export const ColorPicker = (props: ParkColorPicker.RootProps) => {
                         <Input size="2xs" {...inputProps()} />
                       )}
                     />
-                  </HStack>
-                  <Stack gap="1.5">
-                    <Text size="xs" fontWeight="medium" color="fg.default">
+                  </div>
+                  <div class="flex flex-col gap-1.5">
+                    <Text size="xs" class="font-medium text-foreground">
                       Saved Colors
                     </Text>
                     <ParkColorPicker.SwatchGroup>
@@ -85,8 +86,8 @@ export const ColorPicker = (props: ParkColorPicker.RootProps) => {
                         )}
                       </For>
                     </ParkColorPicker.SwatchGroup>
-                  </Stack>
-                </Stack>
+                  </div>
+                </div>
               </ParkColorPicker.Content>
             </ParkColorPicker.Positioner>
           </>

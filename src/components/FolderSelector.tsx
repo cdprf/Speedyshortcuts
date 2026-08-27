@@ -1,7 +1,6 @@
 import { CheckIcon, HomeIcon } from "lucide-solid"
 import { For, Show, createMemo } from "solid-js"
 import { type BookmarkDataType, getFolderIcon } from "~/stores"
-import classes from "~/styles/FolderSelector.module.scss"
 import { FolderIconGlyph } from "./FolderIconGlyph"
 
 type FolderSelectorProps = {
@@ -42,13 +41,13 @@ export const FolderSelector = (props: FolderSelectorProps) => {
   const selectedFolderId = () => props.value ?? props.root.id
 
   return (
-    <div class={classes.folderSelector}>
-      <div class={classes.folderSelectorHeader} id="folder-selector-label">
+    <div class="folderSelector">
+      <div class="folderSelectorHeader" id="folder-selector-label">
         Folder
       </div>
 
       <div
-        class={classes.folderTree}
+        class="folderTree"
         role="group"
         aria-labelledby="folder-selector-label"
       >
@@ -59,17 +58,17 @@ export const FolderSelector = (props: FolderSelectorProps) => {
             return (
               <button
                 type="button"
-                class={classes.folderOption}
+                class="folderOption"
                 classList={{
-                  [classes.folderOptionSelected!]: isSelected(),
-                  [classes.folderOptionNested!]: folder.depth > 0,
+                  folderOptionSelected: isSelected(),
+                  folderOptionNested: folder.depth > 0,
                 }}
                 style={{ "--folder-indent": `${folder.depth * 18}px` }}
                 aria-pressed={isSelected()}
                 onClick={() => props.onChange(folder.id)}
               >
-                <span class={classes.folderBranch} aria-hidden="true" />
-                <span class={classes.folderOptionIcon} aria-hidden="true">
+                <span class="folderBranch" aria-hidden="true" />
+                <span class="folderOptionIcon" aria-hidden="true">
                   <Show when={!folder.isRoot} fallback={<HomeIcon size={17} />}>
                     <FolderIconGlyph
                       name={getFolderIcon(folder.id)}
@@ -77,12 +76,12 @@ export const FolderSelector = (props: FolderSelectorProps) => {
                     />
                   </Show>
                 </span>
-                <span class={classes.folderOptionName} title={folder.title}>
+                <span class="folderOptionName" title={folder.title}>
                   {folder.title}
                 </span>
                 <Show when={isSelected()}>
                   <CheckIcon
-                    class={classes.folderOptionCheck}
+                    class="folderOptionCheck"
                     size={16}
                     aria-hidden="true"
                   />

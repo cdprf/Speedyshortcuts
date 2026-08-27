@@ -27,13 +27,13 @@ import {
 import { ColorPicker, Divider, FileUpload } from "."
 import { NumberInput } from "~/components/ui/number-input"
 import { Switch } from "~/components/ui/switch"
-import { Box, Flex } from "styled-system/jsx"
 import { Show, createSignal, onMount, createMemo } from "solid-js"
 import { Slider } from "~/components/ui/slider"
-import { radii } from "@park-ui/panda-preset"
 import { parseColor } from "@ark-ui/solid"
 import { getGridDimensions } from "~/utils"
 import { CustomTooltip } from "./CustomTooltip"
+
+const RADII = ["none", "xs", "sm", "md", "lg", "xl", "2xl"] as const
 
 export const SettingsDrawer = () => {
   // Reactive signals for settings
@@ -126,13 +126,12 @@ export const SettingsDrawer = () => {
       onOpenChange={(e) => setIsSettingDrawerOpen(e.open)}
     >
       <Drawer.Backdrop />
-      <Drawer.Positioner w="md">
+      <Drawer.Positioner class="settingsDrawerPositioner">
         <Drawer.Content>
           <Drawer.Header>
             <Drawer.Title>Settings</Drawer.Title>
             <Drawer.Description>Look and feel for this page</Drawer.Description>
-            {/* <Drawer.CloseTrigger asChild position="absolute" top="3" right="4"> */}
-            <Drawer.CloseTrigger position="absolute" top="3" right="4">
+            <Drawer.CloseTrigger class="settingsDrawerClose">
               <IconButton variant="ghost">
                 <XIcon />
               </IconButton>
@@ -151,7 +150,7 @@ export const SettingsDrawer = () => {
                 }}
               />
               <ColorPicker
-                mt="4"
+                class="mt-4"
                 value={parseColor(currentBgColor())}
                 onValueChange={(e) => {
                   mainBackgroundColor.setValue(
@@ -161,13 +160,11 @@ export const SettingsDrawer = () => {
                 }}
               />
 
-              <Box display="flex" alignItems="center" gap="2">
+              <div class="flex items-center gap-2">
                 <Divider />
-                <Text my="2" fontWeight="bold">
-                  OR
-                </Text>
+                <Text class="my-2 font-bold">OR</Text>
                 <Divider />
-              </Box>
+              </div>
 
               <FileUpload
                 currentImage={currentBgImage()}
@@ -197,13 +194,13 @@ export const SettingsDrawer = () => {
             <Divider />
 
             <div>
-              <Flex justify="space-between" align="center" gap="2">
+              <div class="flex items-center justify-between gap-2">
                 <SettingItemTitle title="Dark mode" />
                 <Switch
                   checked={currentDarkMode()}
                   onCheckedChange={(e) => darkMode.setValue(e.checked)}
                 />
-              </Flex>
+              </div>
             </div>
 
             <Divider />
@@ -217,7 +214,7 @@ export const SettingsDrawer = () => {
                 onReset={() => resetSetting("gridColumns")}
               />
               <NumberInput
-                mt="4"
+                class="mt-4"
                 value={
                   currentGridColumns()?.toString() ||
                   defaultColumns()?.toString()
@@ -244,8 +241,7 @@ export const SettingsDrawer = () => {
                 onReset={() => resetSetting("dialSize")}
               />
               <Slider
-                mt="4"
-                mb="6"
+                class="mt-4 mb-6"
                 min={40}
                 max={200}
                 value={[currentDialSize()]}
@@ -279,16 +275,15 @@ export const SettingsDrawer = () => {
                 onReset={() => resetSetting("dialRadius")}
               />
               <Slider
-                mt="4"
-                mb="6"
+                class="mt-4 mb-6"
                 min={0}
-                max={radii.length - 1}
+                max={RADII.length - 1}
                 value={[
                   Math.max(
                     0,
                     Math.min(
-                      radii.length - 1,
-                      radii.indexOf(
+                      RADII.length - 1,
+                      RADII.indexOf(
                         currentDialRadius() as
                           "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "none"
                       ) || 0
@@ -297,11 +292,11 @@ export const SettingsDrawer = () => {
                 ]}
                 onValueChange={(e) => {
                   const val = e.value[0]
-                  if (val !== undefined && radii[val]) {
-                    dialRadius.setValue(radii[val] as string)
+                  if (val !== undefined && RADII[val]) {
+                    dialRadius.setValue(RADII[val])
                   }
                 }}
-                marks={radii.map((borderRadius, index) => ({
+                marks={RADII.map((borderRadius, index) => ({
                   value: index,
                   label: borderRadius,
                 }))}
@@ -311,7 +306,7 @@ export const SettingsDrawer = () => {
             <Divider />
 
             <div>
-              <Flex justify="space-between" align="center" gap="2">
+              <div class="flex items-center justify-between gap-2">
                 <SettingItemTitle title="Show speed dial titles" />
                 <Switch
                   checked={currentShowSpeedDialTitles()}
@@ -319,25 +314,25 @@ export const SettingsDrawer = () => {
                     showSpeedDialTitles.setValue(e.checked)
                   }
                 />
-              </Flex>
+              </div>
             </div>
 
             <Divider />
 
             <div>
-              <Flex justify="space-between" align="center" gap="2">
+              <div class="flex items-center justify-between gap-2">
                 <SettingItemTitle title="Show 'Add New' button" />
                 <Switch
                   checked={currentShowAddNew()}
                   onCheckedChange={(e) => showAddNewButton.setValue(e.checked)}
                 />
-              </Flex>
+              </div>
             </div>
 
             <Divider />
 
             <div>
-              <Flex justify="space-between" align="center" gap="2">
+              <div class="flex items-center justify-between gap-2">
                 <SettingItemTitle
                   title="Show 'Settings' button"
                   info="You will be able to access the toogle settings via context menu (or right clicking) on this page"
@@ -348,7 +343,7 @@ export const SettingsDrawer = () => {
                     showSettingsButton.setValue(e.checked)
                   }
                 />
-              </Flex>
+              </div>
             </div>
 
             <Divider />
@@ -366,19 +361,19 @@ export const SettingsDrawer = () => {
             <Divider /> */}
 
             <div>
-              <Flex justify="space-between" align="center" gap="2">
+              <div class="flex items-center justify-between gap-2">
                 <SettingItemTitle title="Open links in new tab by default" />
                 <Switch
                   checked={currentOpenLinksNewTab()}
                   onCheckedChange={(e) => openLinksInNewTab.setValue(e.checked)}
                 />
-              </Flex>
+              </div>
             </div>
 
             <Divider />
 
             <div>
-              <Flex justify="space-between" align="center" gap="2">
+              <div class="flex items-center justify-between gap-2">
                 <SettingItemTitle title="Disable drag and drop" />
                 <Switch
                   checked={currentDisableDragDrop()}
@@ -386,7 +381,7 @@ export const SettingsDrawer = () => {
                     disableDragAndDrop.setValue(e.checked)
                   }
                 />
-              </Flex>
+              </div>
             </div>
 
             {/* <Divider />
@@ -427,7 +422,7 @@ export const SettingsDrawer = () => {
               </div>
             </div> */}
           </Drawer.Body>
-          <Drawer.Footer gap="3">
+          <Drawer.Footer class="gap-3">
             {/* <Drawer.CloseTrigger asChild> */}
             <Drawer.CloseTrigger>
               <Button variant="outline">Close</Button>
@@ -452,8 +447,8 @@ const SettingItemTitle = (props: {
 }) => {
   return (
     <>
-      <Flex align="center" gap="2">
-        <Text size="lg" fontWeight="bold">
+      <div class="flex items-center gap-2">
+        <Text size="lg" class="font-bold">
           {props.title}
         </Text>
 
@@ -487,7 +482,7 @@ const SettingItemTitle = (props: {
             </IconButton>
           </CustomTooltip>
         </Show>
-      </Flex>
+      </div>
 
       <Show when={props.subTitle}>
         <Text size="sm">{props.subTitle}</Text>

@@ -1,5 +1,4 @@
 import { Grid } from "~/components"
-import classes from "~/styles/App.module.scss"
 import { createEffect, onMount } from "solid-js"
 import {
   darkMode,
@@ -56,7 +55,7 @@ export const App = () => {
   })
 
   return (
-    <div class={classes.app}>
+    <div class="app">
       <Grid />
     </div>
   )

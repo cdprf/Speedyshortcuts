@@ -7,11 +7,9 @@ import {
 } from "lucide-solid"
 import { createSignal } from "solid-js"
 import { Portal } from "solid-js/web"
-import { HStack } from "styled-system/jsx"
 import { browser } from "wxt/browser"
 import { Menu } from "~/components/ui/menu"
 import type { BookmarkDataType, ModalTypes } from "~/stores"
-import classes from "~/styles/Grid.module.scss"
 
 type P = {
   item: BookmarkDataType
@@ -53,22 +51,22 @@ export const ContextMenu = (props: P) => {
       <Menu.Trigger
         asChild={(props) => <button {...props} on:click={handleOpenMenu} />}
       >
-        <EllipsisVertical size={14} class={classes.menuIcon} />
+        <EllipsisVertical size={14} class="menuIcon" />
       </Menu.Trigger>
 
       <Portal>
         <Menu.Positioner>
-          <Menu.Content border="1px solid var(--colors-gray-a6)">
+          <Menu.Content class="contextMenuContent">
             {!props.item?.url && (
               <Menu.Item
                 id="open_in_new_tab"
                 value="open_in_new_tab"
                 onClick={openFolderLinks}
               >
-                <HStack>
+                <div class="flex items-center gap-2">
                   <FileStackIcon size={16} />
                   Open all in new tabs
-                </HStack>
+                </div>
               </Menu.Item>
             )}
 
@@ -77,10 +75,10 @@ export const ContextMenu = (props: P) => {
               value="edit"
               onClick={() => props.openModal("EDIT", props.item)}
             >
-              <HStack>
+              <div class="flex items-center gap-2">
                 <PencilIcon size={16} />
                 Edit
-              </HStack>
+              </div>
             </Menu.Item>
 
             <Menu.Item
@@ -88,10 +86,10 @@ export const ContextMenu = (props: P) => {
               value="delete"
               onClick={() => props.openModal("DELETE", props.item)}
             >
-              <HStack>
+              <div class="flex items-center gap-2">
                 <Trash2Icon size={16} />
                 Delete
-              </HStack>
+              </div>
             </Menu.Item>
 
             <Menu.Item
@@ -99,10 +97,10 @@ export const ContextMenu = (props: P) => {
               value="duplicate"
               onClick={() => props.duplicateSpeedDial(props.item)}
             >
-              <HStack>
+              <div class="flex items-center gap-2">
                 <CopyPlusIcon size={16} />
                 Duplicate
-              </HStack>
+              </div>
             </Menu.Item>
           </Menu.Content>
         </Menu.Positioner>

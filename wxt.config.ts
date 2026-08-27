@@ -1,12 +1,11 @@
+import tailwindcss from "@tailwindcss/vite"
 import { defineConfig } from "wxt"
 import solid from "vite-plugin-solid"
-import { resolve } from "path"
 
 export default defineConfig({
   imports: false,
   modules: ["@wxt-dev/module-solid"],
   srcDir: "./src",
-  alias: { "styled-system": resolve("./styled-system") },
   zip: {
     artifactTemplate: "extension-{{browser}}.zip",
     includeSources: [
@@ -17,13 +16,12 @@ export default defineConfig({
       "README.md",
       "tsconfig.json",
       "wxt.config.ts",
-      "panda.config.ts",
-      "postcss.config.cjs",
-      "components.json",
-      "park-ui.json",
     ],
   },
-  vite: () => ({ plugins: [solid()], build: { chunkSizeWarningLimit: 1000 } }),
+  vite: () => ({
+    plugins: [tailwindcss(), solid()],
+    build: { chunkSizeWarningLimit: 1000 },
+  }),
   manifest: (env) => ({
     name: "Nice Speed Dials",
     description: "Nice and Simple Speed dials Extension for Browser",

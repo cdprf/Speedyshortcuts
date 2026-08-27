@@ -1,26 +1,46 @@
-import { Show, children } from "solid-js"
-import * as StyledNumberInput from "./styled/number-input"
+import { NumberInput as ArkNumberInput } from "@ark-ui/solid"
+import { Show, children, type ComponentProps } from "solid-js"
+import { withClass } from "~/utils/with-class"
 
-export interface NumberInputProps extends StyledNumberInput.RootProps {}
+const Root = withClass(ArkNumberInput.Root, "numberInput__root")
+const Control = withClass(
+  ArkNumberInput.Control,
+  "numberInput__control numberInput__control--size_md"
+)
+const DecrementTrigger = withClass(
+  ArkNumberInput.DecrementTrigger,
+  "numberInput__decrementTrigger"
+)
+const IncrementTrigger = withClass(
+  ArkNumberInput.IncrementTrigger,
+  "numberInput__incrementTrigger"
+)
+const Input = withClass(ArkNumberInput.Input, "numberInput__input")
+const Label = withClass(
+  ArkNumberInput.Label,
+  "numberInput__label numberInput__label--size_md"
+)
+
+export type NumberInputProps = ComponentProps<typeof Root>
 
 export const NumberInput = (props: NumberInputProps) => {
   const getChildren = children(() => props.children)
 
   return (
-    <StyledNumberInput.Root {...props}>
+    <Root {...props}>
       <Show when={getChildren()}>
-        <StyledNumberInput.Label>{getChildren()}</StyledNumberInput.Label>
+        <Label>{getChildren()}</Label>
       </Show>
-      <StyledNumberInput.Control>
-        <StyledNumberInput.Input />
-        <StyledNumberInput.IncrementTrigger>
+      <Control>
+        <Input />
+        <IncrementTrigger>
           <ChevronUpIcon />
-        </StyledNumberInput.IncrementTrigger>
-        <StyledNumberInput.DecrementTrigger>
+        </IncrementTrigger>
+        <DecrementTrigger>
           <ChevronDownIcon />
-        </StyledNumberInput.DecrementTrigger>
-      </StyledNumberInput.Control>
-    </StyledNumberInput.Root>
+        </DecrementTrigger>
+      </Control>
+    </Root>
   )
 }
 

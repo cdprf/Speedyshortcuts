@@ -1,8 +1,6 @@
 import { XIcon } from "lucide-solid"
 import { Show } from "solid-js"
 import { Portal } from "solid-js/web"
-import { css } from "styled-system/css"
-import { HStack, VStack } from "styled-system/jsx"
 import { Button } from "~/components/ui/button"
 import { Dialog } from "~/components/ui/dialog"
 import { IconButton } from "~/components/ui/icon-button"
@@ -27,9 +25,6 @@ import {
 import { FolderSelector } from "./FolderSelector"
 import { IconSelector } from "./IconSelector"
 
-const fieldLabelClass = css({ fontSize: "sm", fontWeight: "medium" })
-const modalFormClass = css({ width: "full" })
-
 export const InputModal = () => {
   const handleSubmit = (event: SubmitEvent) => {
     event.preventDefault()
@@ -52,14 +47,9 @@ export const InputModal = () => {
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content
-            p={"4"}
-            minW="md"
-            maxHeight="calc(100vh - 32px)"
-            overflowY="auto"
-          >
-            <HStack justifyContent="space-between" mb={4}>
-              <Dialog.Title fontSize="xl" fontWeight="semibold">
+          <Dialog.Content class="inputModalContent">
+            <div class="mb-4 flex items-center justify-between">
+              <Dialog.Title class="text-xl font-semibold">
                 {modalType()?.title}
               </Dialog.Title>
 
@@ -69,12 +59,12 @@ export const InputModal = () => {
                   <XIcon aria-hidden="true" />
                 </IconButton>
               </Dialog.CloseTrigger>
-            </HStack>
+            </div>
 
-            <form class={modalFormClass} onSubmit={handleSubmit}>
-              <VStack gap={4}>
+            <form class="w-full" onSubmit={handleSubmit}>
+              <div class="flex flex-col gap-4">
                 {modalType()?.type === "DELETE" ? (
-                  <Text alignSelf={"flex-start"} fontSize="lg">
+                  <Text size="lg" class="self-start">
                     {modalItemKind() === "folder"
                       ? "Delete this folder and everything inside it?"
                       : modalType()?.description}
@@ -82,17 +72,15 @@ export const InputModal = () => {
                 ) : (
                   <>
                     <Show when={modalType()?.type === "ADD"}>
-                      <VStack width="full" alignItems="stretch" gap={2}>
-                        <HStack
-                          width="full"
-                          gap={2}
+                      <div class="flex w-full flex-col items-stretch gap-2">
+                        <div
+                          class="flex w-full items-center gap-2"
                           role="group"
                           aria-label="Item type"
                         >
                           <Button
                             type="button"
-                            flex="1"
-                            minWidth="0"
+                            class="min-w-0 flex-1"
                             aria-pressed={modalItemKind() === "bookmark"}
                             variant={
                               modalItemKind() === "bookmark"
@@ -105,8 +93,7 @@ export const InputModal = () => {
                           </Button>
                           <Button
                             type="button"
-                            flex="1"
-                            minWidth="0"
+                            class="min-w-0 flex-1"
                             aria-pressed={modalItemKind() === "folder"}
                             variant={
                               modalItemKind() === "folder" ? "solid" : "outline"
@@ -115,12 +102,12 @@ export const InputModal = () => {
                           >
                             Folder
                           </Button>
-                        </HStack>
-                      </VStack>
+                        </div>
+                      </div>
                     </Show>
 
-                    <VStack width="full" alignItems="stretch" gap={2}>
-                      <label for="item-title" class={fieldLabelClass}>
+                    <div class="flex w-full flex-col items-stretch gap-2">
+                      <label for="item-title" class="text-sm font-medium">
                         Name
                       </label>
                       <Input
@@ -133,10 +120,10 @@ export const InputModal = () => {
                         value={modalData()?.title || ""}
                         onInput={handleModalDataChange}
                       />
-                    </VStack>
+                    </div>
                     <Show when={modalItemKind() === "bookmark"}>
-                      <VStack width="full" alignItems="stretch" gap={2}>
-                        <label for="item-url" class={fieldLabelClass}>
+                      <div class="flex w-full flex-col items-stretch gap-2">
+                        <label for="item-url" class="text-sm font-medium">
                           URL
                         </label>
                         <Input
@@ -147,7 +134,7 @@ export const InputModal = () => {
                           value={modalData()?.url || ""}
                           onInput={handleModalDataChange}
                         />
-                      </VStack>
+                      </div>
                     </Show>
                     <Show
                       when={
@@ -173,7 +160,7 @@ export const InputModal = () => {
                   </>
                 )}
 
-                <HStack alignSelf={"flex-end"} gap={4}>
+                <div class="flex items-center gap-4 self-end">
                   <Button
                     type="button"
                     variant="ghost"
@@ -188,8 +175,8 @@ export const InputModal = () => {
                   >
                     {modalType()?.button}
                   </Button>
-                </HStack>
-              </VStack>
+                </div>
+              </div>
             </form>
           </Dialog.Content>
         </Dialog.Positioner>

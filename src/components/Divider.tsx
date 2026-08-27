@@ -1,5 +1,8 @@
-import { type DividerProps, Divider as ParkDivider } from "styled-system/jsx"
+import type { JSX } from "solid-js"
+import { cn } from "~/utils/cn"
+
+export type DividerProps = JSX.HTMLAttributes<HTMLHRElement>
 
 export const Divider = (props: DividerProps) => (
-  <ParkDivider my={props.my ?? "6"} {...props} />
+  <hr {...props} class={cn("divider", props.class)} />
 )

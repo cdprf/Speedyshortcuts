@@ -1,13 +1,12 @@
 import { ChevronRightIcon, HomeIcon } from "lucide-solid"
 import { For, Show } from "solid-js"
 import { folderPath, getFolderIcon, navigateToFolder } from "~/stores"
-import classes from "~/styles/Grid.module.scss"
 import { FolderIconGlyph } from "./FolderIconGlyph"
 
 export const FolderBreadcrumb = () => {
   return (
     <Show when={folderPath().length > 1}>
-      <nav class={classes.breadcrumb} aria-label="Folder path">
+      <nav class="breadcrumb" aria-label="Folder path">
         <ol>
           <For each={folderPath()}>
             {(folder, index) => {
@@ -18,16 +17,15 @@ export const FolderBreadcrumb = () => {
                 <li>
                   <Show when={!isHome()}>
                     <ChevronRightIcon
-                      class={classes.breadcrumbSeparator}
+                      class="breadcrumbSeparator"
                       size={14}
                       aria-hidden="true"
                     />
                   </Show>
                   <button
                     type="button"
-                    class={`${classes.breadcrumbItem} ${
-                      isCurrent() ? classes.breadcrumbCurrent : ""
-                    }`}
+                    class="breadcrumbItem"
+                    classList={{ breadcrumbCurrent: isCurrent() }}
                     aria-current={isCurrent() ? "page" : undefined}
                     disabled={isCurrent()}
                     onClick={() => navigateToFolder(folder.id)}

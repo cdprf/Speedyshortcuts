@@ -8,7 +8,6 @@ import {
   type ModalTypes,
   openLinksInNewTab,
 } from "~/stores"
-import classes from "~/styles/Grid.module.scss"
 import { getFaviconUrl } from "~/utils"
 import { ContextMenu, FolderIconGlyph } from "./"
 
@@ -33,23 +32,19 @@ export const GridItem = (props: P) => {
   })
 
   const itemContent = () => (
-    <div class={classes.gridItemContent}>
-      <div class={classes.gridItemImgDiv}>
+    <div class="gridItemContent">
+      <div class="gridItemImgDiv">
         <Show
           when={props.item.url}
           fallback={
             <FolderIconGlyph
               name={getFolderIcon(props.item.id)}
-              class={classes.gridItemImg}
+              class="gridItemImg"
             />
           }
         >
           {(url) => (
-            <img
-              class={classes.gridItemImg}
-              src={getFaviconUrl(url())}
-              alt=""
-            />
+            <img class="gridItemImg" src={getFaviconUrl(url())} alt="" />
           )}
         </Show>
       </div>
@@ -65,7 +60,7 @@ export const GridItem = (props: P) => {
         >
           <Tooltip.Trigger
             asChild={(triggerProps) => (
-              <span {...triggerProps} class={classes.gridItemText}>
+              <span {...triggerProps} class="gridItemText">
                 {props.item.title}
               </span>
             )}
@@ -76,7 +71,7 @@ export const GridItem = (props: P) => {
               <Tooltip.Arrow>
                 <Tooltip.ArrowTip />
               </Tooltip.Arrow>
-              <Tooltip.Content w="max-content" maxW="3xl" textAlign="center">
+              <Tooltip.Content class="w-max max-w-3xl text-center">
                 <Text>{props.item.title}</Text>
                 <Show when={props.item.url}>
                   <Text>{props.item.url}</Text>
@@ -90,7 +85,7 @@ export const GridItem = (props: P) => {
   )
 
   return (
-    <div class={classes.gridItem}>
+    <div class="gridItem">
       <ContextMenu
         item={props.item}
         openModal={props.openModal}
@@ -102,7 +97,7 @@ export const GridItem = (props: P) => {
         fallback={
           <button
             type="button"
-            class={classes.gridItemAction}
+            class="gridItemAction"
             onClick={() => props.openFolder(props.item)}
             aria-label={`Open ${props.item.title} folder`}
             title={props.showTitle ? undefined : props.item.title}
@@ -113,7 +108,7 @@ export const GridItem = (props: P) => {
       >
         {(url) => (
           <a
-            class={classes.gridItemAction}
+            class="gridItemAction"
             href={url()}
             target={target()}
             rel={target() === "_blank" ? "noreferrer" : undefined}

@@ -1,21 +1,36 @@
-import type { JSX } from "solid-js"
-import { Show, splitProps } from "solid-js"
-import { Center, styled } from "styled-system/jsx"
+import { ark } from "@ark-ui/solid"
+import { Show, splitProps, type ComponentProps, type JSX } from "solid-js"
+import { cn } from "~/utils/cn"
 import { Spinner } from "./spinner"
-import {
-  Button as StyledButton,
-  type ButtonProps as StyledButtonProps,
-} from "./styled/button"
+
+export type ButtonVariant = "solid" | "outline" | "ghost"
+export type ButtonSize = "xs" | "sm" | "md"
 
 interface ButtonLoadingProps {
   loading?: boolean
   loadingText?: JSX.Element
 }
 
-export interface ButtonProps extends StyledButtonProps, ButtonLoadingProps {}
+export type ButtonProps = ComponentProps<typeof ark.button> &
+  ButtonLoadingProps & { variant?: ButtonVariant; size?: ButtonSize }
+
+export const buttonClass = (
+  variant: ButtonVariant = "solid",
+  size: ButtonSize = "md",
+  iconOnly = false
+) =>
+  cn(
+    "button",
+    `button--variant_${variant}`,
+    `button--size_${size}`,
+    iconOnly && "button--icon-only"
+  )
 
 export const Button = (props: ButtonProps) => {
   const [localProps, rest] = splitProps(props, [
+    "class",
+    "variant",
+    "size",
     "loading",
     "disabled",
     "loadingText",
@@ -24,34 +39,29 @@ export const Button = (props: ButtonProps) => {
   const trulyDisabled = () => localProps.loading || localProps.disabled
 
   return (
-    <StyledButton disabled={trulyDisabled()} {...rest}>
+    <ark.button
+      {...rest}
+      disabled={trulyDisabled()}
+      class={cn(
+        buttonClass(localProps.variant, localProps.size),
+        localProps.class as string | undefined
+      )}
+    >
       <Show
         when={localProps.loading && !localProps.loadingText}
         fallback={localProps.loadingText || localProps.children}
       >
         <>
           <ButtonSpinner />
-          <styled.span opacity={0}>{localProps.children}</styled.span>
+          <span class="button__loading-content">{localProps.children}</span>
         </>
       </Show>
-    </StyledButton>
+    </ark.button>
   )
 }
 
 const ButtonSpinner = () => (
-  <Center
-    inline
-    position="absolute"
-    transform="translate(-50%, -50%)"
-    top="50%"
-    insetStart="50%"
-  >
-    <Spinner
-      width="1.1em"
-      height="1.1em"
-      borderWidth="1.5px"
-      borderTopColor="fg.disabled"
-      borderRightColor="fg.disabled"
-    />
-  </Center>
+  <span class="button__spinner-container">
+    <Spinner class="button__spinner" />
+  </span>
 )

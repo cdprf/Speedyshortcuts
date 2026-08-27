@@ -22,11 +22,8 @@ import {
   disableDragAndDrop,
   DEFAULT_VALUES,
 } from "~/stores"
-import classes from "~/styles/Grid.module.scss"
 import { GridItem, InputModal, SettingsDrawer } from "./"
 import { getGridDimensions } from "~/utils"
-import { token } from "styled-system/tokens"
-import { HStack } from "styled-system/jsx"
 import { IconButton } from "./ui/icon-button"
 import { CustomTooltip } from "./CustomTooltip"
 import { Button } from "./ui/button"
@@ -95,7 +92,7 @@ export const Grid = () => {
   createEffect(() => {
     const size = currentDialSize()
     const radius = currentDialRadius()
-    const radiusToken = token.var(`radii.${radius}` as any)
+    const radiusToken = `var(--radii-${radius}, var(--radii-sm))`
 
     document.documentElement.style.setProperty("--dial-size", `${size}px`)
     document.documentElement.style.setProperty("--dial-radius", radiusToken)
@@ -140,10 +137,10 @@ export const Grid = () => {
       <InputModal />
       <SettingsDrawer />
 
-      <div class={classes.toolbar}>
+      <div class="toolbar">
         <FolderBreadcrumb />
 
-        <HStack gap={2} flexShrink={0} marginLeft="auto">
+        <div class="ml-auto flex shrink-0 items-center gap-2">
           <Show when={currentShowAddNew()}>
             <CustomTooltip content="Add New">
               <IconButton variant="outline" onClick={() => openModal("ADD")}>
@@ -174,24 +171,24 @@ export const Grid = () => {
               </Button>
             </CustomTooltip>
           </Show> */}
-        </HStack>
+        </div>
       </div>
 
       <Show when={isSpeedDialsLoaded()}>
         <Show
           when={speedDials.length > 0}
           fallback={
-            <div class={classes.emptyState}>
-              <div class={classes.emptyStateIcon}>
+            <div class="emptyState">
+              <div class="emptyStateIcon">
                 <FolderOpenIcon size={28} />
               </div>
-              <Text fontSize="lg" fontWeight="semibold">
+              <Text size="lg" class="font-semibold">
                 This folder is empty
               </Text>
-              <Text fontSize="sm" color="fg.muted">
+              <Text size="sm" class="text-muted-foreground">
                 Add a speed dial or create another folder here.
               </Text>
-              <Button mt={2} onClick={() => openModal("ADD")}>
+              <Button class="mt-2" onClick={() => openModal("ADD")}>
                 <PlusIcon size={18} />
                 Add an item
               </Button>
@@ -199,7 +196,7 @@ export const Grid = () => {
           }
         >
           <div
-            class={classes.grid}
+            class="speedDialGrid"
             style={{
               "--grid-width": gridDimensions().width.toString(),
               "--grid-height": gridDimensions().height.toString(),

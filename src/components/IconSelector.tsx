@@ -3,7 +3,6 @@ import { For, Show, createEffect, createMemo, createSignal } from "solid-js"
 import { Input } from "~/components/ui/input"
 import { Button } from "~/components/ui/button"
 import { DEFAULT_FOLDER_ICON } from "~/stores"
-import classes from "~/styles/IconSelector.module.scss"
 import {
   FolderIconGlyph,
   isLucideIconName,
@@ -66,13 +65,13 @@ export const IconSelector = (props: IconSelectorProps) => {
   })
 
   return (
-    <div class={classes.iconSelector}>
-      <div class={classes.iconSelectorHeader}>
+    <div class="iconSelector">
+      <div class="iconSelectorHeader">
         <label for="folder-icon-search">Folder icon</label>
         <span>{filteredIcons().length.toLocaleString()} icons</span>
       </div>
 
-      <div class={classes.searchField}>
+      <div class="searchField">
         <SearchIcon size={16} aria-hidden="true" />
         <Input
           id="folder-icon-search"
@@ -88,10 +87,10 @@ export const IconSelector = (props: IconSelectorProps) => {
       <Show
         when={visibleIcons().length > 0}
         fallback={
-          <div class={classes.noResults}>No icons match “{query().trim()}”</div>
+          <div class="noResults">No icons match “{query().trim()}”</div>
         }
       >
-        <div class={classes.iconGrid} role="group" aria-label="Folder icons">
+        <div class="iconGrid" role="group" aria-label="Folder icons">
           <For each={visibleIcons()}>
             {(icon) => {
               const isSelected = () => icon.name === selectedIcon()
@@ -99,8 +98,8 @@ export const IconSelector = (props: IconSelectorProps) => {
               return (
                 <button
                   type="button"
-                  class={classes.iconOption}
-                  classList={{ [classes.iconOptionSelected!]: isSelected() }}
+                  class="iconOption"
+                  classList={{ iconOptionSelected: isSelected() }}
                   aria-pressed={isSelected()}
                   aria-label={icon.label}
                   title={icon.label}
@@ -117,8 +116,7 @@ export const IconSelector = (props: IconSelectorProps) => {
               type="button"
               size="sm"
               variant="ghost"
-              width="full"
-              class={classes.showMoreOption}
+              class="showMoreOption"
               onClick={() =>
                 setVisibleCount((count) => count + INITIAL_ICON_COUNT)
               }

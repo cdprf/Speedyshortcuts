@@ -1,10 +1,12 @@
 import { Trash2Icon, ImageIcon, CircleAlertIcon } from "lucide-solid"
 import { Button } from "~/components/ui/button"
-import { FileUpload as ParkFileUpload } from "~/components/ui/file-upload"
+import {
+  FileUpload as ParkFileUpload,
+  type FileUploadRootProps,
+} from "~/components/ui/file-upload"
 import { IconButton } from "~/components/ui/icon-button"
 import { Alert } from "~/components/ui/alert"
 import { Show } from "solid-js"
-import { Flex, Box } from "styled-system/jsx"
 import { Text } from "~/components/ui/text"
 import type { FileUploadFileError } from "@ark-ui/solid/file-upload"
 
@@ -18,7 +20,7 @@ const errorMessages: Record<FileUploadFileError, string> = {
 }
 
 export const FileUpload = (
-  props: ParkFileUpload.RootProps & {
+  props: FileUploadRootProps & {
     onFilesChange?: (files: File[]) => void
     currentImage?: string
     onRemove?: () => void
@@ -54,8 +56,8 @@ export const FileUpload = (
           <>
             <ParkFileUpload.HiddenInput />
 
-            <ParkFileUpload.Dropzone minH="auto" cursor="pointer">
-              <ParkFileUpload.Label textAlign="center">
+            <ParkFileUpload.Dropzone class="cursor-pointer min-h-auto">
+              <ParkFileUpload.Label class="text-center">
                 Upload image for main background
                 <br />
                 (max size 1.5MB)
@@ -73,7 +75,7 @@ export const FileUpload = (
                 {(fileUpload) => (
                   <Show when={fileUpload().rejectedFiles[0]?.errors[0]} keyed>
                     {(error) => (
-                      <Alert.Root my="3">
+                      <Alert.Root class="my-3">
                         <Alert.Icon
                           asChild={(iconProps) => (
                             <CircleAlertIcon size={18} {...iconProps()} />
@@ -97,31 +99,14 @@ export const FileUpload = (
           </>
         }
       >
-        <Box
-          borderWidth="1px"
-          borderColor="border.emphasized"
-          borderRadius="md"
-          p="4"
-          bg="bg.surface"
-        >
-          <Flex direction="column" gap="3">
-            <Flex align="center" gap="2">
+        <div class="currentImagePanel">
+          <div class="flex flex-col gap-3">
+            <div class="flex items-center gap-2">
               <ImageIcon size={20} />
-              <Text fontWeight="medium">Current background image</Text>
-            </Flex>
+              <Text class="font-medium">Current background image</Text>
+            </div>
 
-            <Box
-              borderWidth="1px"
-              borderColor="border.default"
-              borderRadius="md"
-              overflow="hidden"
-              bg="bg.canvas"
-              maxH="200px"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              position="relative"
-            >
+            <div class="currentImagePreview">
               <img
                 src={props.currentImage}
                 alt="Background preview"
@@ -136,15 +121,13 @@ export const FileUpload = (
                 variant="outline"
                 onClick={handleRemove}
                 aria-label="Remove image"
-                position="absolute"
-                top="2"
-                right="2"
+                class="currentImageRemove"
               >
                 <Trash2Icon />
               </IconButton>
-            </Box>
-          </Flex>
-        </Box>
+            </div>
+          </div>
+        </div>
       </Show>
     </ParkFileUpload.Root>
   )

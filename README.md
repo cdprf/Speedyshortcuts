@@ -80,9 +80,8 @@ hostname. -->
 - [SolidJS](https://www.solidjs.com/) and TypeScript for the application.
 - [WXT](https://wxt.dev/) for extension entry points, development, and
   multi-browser builds.
-- [Park UI](https://park-ui.com/) and [Ark UI](https://ark-ui.com/) for
-  accessible interface primitives.
-- [Panda CSS](https://panda-css.com/) and SCSS modules for styling and themes.
+- [Ark UI](https://ark-ui.com/) for accessible interface primitives.
+- [Tailwind CSS](https://tailwindcss.com/) for styling and owned design tokens.
 - `solid-dnd-directive` for drag-and-drop ordering.
 - `lucide-solid` for interface and folder icons.
 - Browser Bookmarks, Storage, Tabs, and Context Menus APIs for native browser
@@ -152,21 +151,21 @@ For Firefox:
 
 ## Available commands
 
-| Command              | Purpose                                  |
-| -------------------- | ---------------------------------------- |
-| `yarn prepare`       | Generate Panda CSS and WXT project files |
-| `yarn dev`           | Start Chrome development mode            |
-| `yarn dev:firefox`   | Start Firefox development mode           |
-| `yarn build`         | Create a production Chrome build         |
-| `yarn build:firefox` | Create a production Firefox build        |
-| `yarn zip`           | Package the Chrome extension             |
-| `yarn zip:firefox`   | Package the Firefox extension            |
-| `yarn zip:edge`      | Package the Edge extension               |
-| `yarn zip:all`       | Package Chrome, Firefox, and Edge        |
-| `yarn format`        | Format the project with Prettier         |
+| Command              | Purpose                           |
+| -------------------- | --------------------------------- |
+| `yarn prepare`       | Generate WXT project files        |
+| `yarn dev`           | Start Chrome development mode     |
+| `yarn dev:firefox`   | Start Firefox development mode    |
+| `yarn build`         | Create a production Chrome build  |
+| `yarn build:firefox` | Create a production Firefox build |
+| `yarn zip`           | Package the Chrome extension      |
+| `yarn zip:firefox`   | Package the Firefox extension     |
+| `yarn zip:edge`      | Package the Edge extension        |
+| `yarn zip:all`       | Package Chrome, Firefox, and Edge |
+| `yarn format`        | Format the project with Prettier  |
 
-Generated files are written to `.wxt`, `.output`, and `styled-system`. They are
-not source files and should not be committed.
+Generated files are written to `.wxt` and `.output`. They are not source files
+and should not be committed.
 
 ## Project structure
 
@@ -175,12 +174,11 @@ src/
 ├── components/       Application and reusable UI components
 ├── entrypoints/      WXT new-tab and background entry points
 ├── stores/           Bookmarks, folders, settings, and modal state
-├── styles/           Component-level SCSS modules
-├── theme/            Panda CSS tokens and shared styles
+├── index.css         Tailwind entry point and shared design tokens
 └── utils/            Shared utility functions
 ```
 
-Static extension assets live in `public`, while WXT, Panda CSS, and Park UI are
+Static extension assets live in `public`, while WXT and Tailwind CSS are
 configured from the files in the repository root. Store-facing copy is kept in
 `DESCRIPTION.md`, and user-facing release notes live in `CHANGELOG.md`.
 

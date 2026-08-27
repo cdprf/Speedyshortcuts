@@ -29,7 +29,7 @@ features.
    yarn install
    ```
 
-3. If the generated WXT or Panda CSS files are missing, prepare the project:
+3. If the generated WXT files are missing, prepare the project:
 
    ```sh
    yarn prepare
@@ -45,8 +45,8 @@ features.
    yarn dev:firefox
    ```
 
-WXT will create development output in generated directories such as `.wxt`,
-`.output`, and `styled-system`. Do not edit or commit those directories.
+WXT will create development output in generated directories such as `.wxt` and
+`.output`. Do not edit or commit those directories.
 
 Development builds use a separate
 `DEV_NICE_SPEED_DIALS_BOOKMARKS_[DO_NOT_DELETE]` bookmark folder so they do not
@@ -55,11 +55,10 @@ interfere with data from the published extension.
 ## Project structure
 
 - `src/components` contains the application and UI components.
-- `src/components/ui` contains the reusable Park UI components.
+- `src/components/ui` contains the owned Ark UI and Tailwind components.
 - `src/stores` contains bookmark, folder, modal, and settings state.
 - `src/entrypoints` contains the WXT new-tab and background entry points.
-- `src/styles` contains component-level SCSS modules.
-- `src/theme` contains shared Panda CSS theme values and styles.
+- `src/index.css` contains the Tailwind entry point and shared design tokens.
 - `src/utils` contains small shared utilities.
 - `public` contains extension icons and other static assets.
 

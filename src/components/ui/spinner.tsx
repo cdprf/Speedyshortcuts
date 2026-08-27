@@ -1,11 +1,10 @@
-import { mergeProps, splitProps } from "solid-js"
-import { styled } from "styled-system/jsx"
-import {
-  Spinner as StyledSpinner,
-  type SpinnerProps as StyledSpinnerProps,
-} from "./styled/spinner"
+import { ark } from "@ark-ui/solid"
+import { mergeProps, splitProps, type ComponentProps } from "solid-js"
+import { withClass } from "~/utils/with-class"
 
-export interface SpinnerProps extends StyledSpinnerProps {
+const SpinnerRoot = withClass(ark.div, "spinner spinner--size_md")
+
+export type SpinnerProps = ComponentProps<typeof SpinnerRoot> & {
   /**
    * For accessibility, it is important to add a fallback loading text.
    * This text will be visible to screen readers.
@@ -19,12 +18,8 @@ export const Spinner = (props: SpinnerProps) => {
   const localProps = mergeProps({ label: "Loading..." }, _localProps)
 
   return (
-    <StyledSpinner
-      borderBottomColor="transparent"
-      borderLeftColor="transparent"
-      {...rootProps}
-    >
-      <styled.span srOnly>{localProps.label}</styled.span>
-    </StyledSpinner>
+    <SpinnerRoot {...rootProps}>
+      <span class="sr-only">{localProps.label}</span>
+    </SpinnerRoot>
   )
 }

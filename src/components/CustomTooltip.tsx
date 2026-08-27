@@ -1,7 +1,7 @@
-import { Tooltip } from "./ui/tooltip"
+import { Tooltip, type TooltipRootProps } from "./ui/tooltip"
 
 export const CustomTooltip = (
-  props: { content: string } & Tooltip.RootProps
+  props: { content: string } & TooltipRootProps
 ) => {
   return (
     <Tooltip.Root
