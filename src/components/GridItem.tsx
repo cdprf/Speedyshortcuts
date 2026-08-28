@@ -110,6 +110,7 @@ export const GridItem = (props: P) => {
           <a
             class="gridItemAction"
             href={url()}
+            draggable={false}
             target={target()}
             rel={target() === "_blank" ? "noreferrer" : undefined}
             aria-label={`Open ${props.item.title}`}
