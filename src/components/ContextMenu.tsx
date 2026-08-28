@@ -49,14 +49,20 @@ export const ContextMenu = (props: P) => {
       onOpenChange={(e) => setOpen(e.open)}
     >
       <Menu.Trigger
-        asChild={(props) => <button {...props} on:click={handleOpenMenu} />}
+        asChild={(triggerProps) => (
+          <button
+            {...triggerProps}
+            class="absolute! top-2 right-2 z-1 cursor-pointer p-1 opacity-0 [transition:opacity_0.25s_ease-in-out,background-color_0.25s_ease-in-out] focus:opacity-100 data-[state=open]:opacity-100 group-hover/gridItem:opacity-100! group-hover/gridItem:[transition:opacity_0.25s_ease-in-out_0.4s,background-color_0.25s_ease-in-out]"
+            on:click={handleOpenMenu}
+          />
+        )}
       >
-        <EllipsisVertical size={14} class="menuIcon" />
+        <EllipsisVertical size={14} />
       </Menu.Trigger>
 
       <Portal>
         <Menu.Positioner>
-          <Menu.Content class="contextMenuContent">
+          <Menu.Content class="border border-(--colors-gray-a6)">
             {!props.item?.url && (
               <Menu.Item
                 id="open_in_new_tab"

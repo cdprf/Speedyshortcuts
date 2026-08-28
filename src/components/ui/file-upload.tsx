@@ -6,9 +6,14 @@ import {
 import type { ComponentProps } from "solid-js"
 import { withClass } from "~/utils/with-class"
 
-const RootProvider = withClass(ArkFileUpload.RootProvider, "fileUpload__root")
-const Root = withClass(ArkFileUpload.Root, "fileUpload__root")
-const Dropzone = withClass(ArkFileUpload.Dropzone, "fileUpload__dropzone")
+const rootClass = "flex w-full flex-col gap-4"
+
+const RootProvider = withClass(ArkFileUpload.RootProvider, rootClass)
+const Root = withClass(ArkFileUpload.Root, rootClass)
+const Dropzone = withClass(
+  ArkFileUpload.Dropzone,
+  "flex min-h-80 flex-col items-center justify-center gap-3 rounded-xl border border-border bg-background px-6 py-4 [&.min-h-auto]:min-h-auto"
+)
 const ItemDeleteTrigger = withClass(
   ArkFileUpload.ItemDeleteTrigger,
   "fileUpload__itemDeleteTrigger"
@@ -28,7 +33,7 @@ const ItemSizeText = withClass(
   ArkFileUpload.ItemSizeText,
   "fileUpload__itemSizeText"
 )
-const Label = withClass(ArkFileUpload.Label, "fileUpload__label")
+const Label = withClass(ArkFileUpload.Label, "text-sm leading-5 font-medium")
 const Trigger = withClass(ArkFileUpload.Trigger, "fileUpload__trigger")
 
 export type FileUploadRootProviderProps = ComponentProps<typeof RootProvider>

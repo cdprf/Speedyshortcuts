@@ -126,12 +126,12 @@ export const SettingsDrawer = () => {
       onOpenChange={(e) => setIsSettingDrawerOpen(e.open)}
     >
       <Drawer.Backdrop />
-      <Drawer.Positioner class="settingsDrawerPositioner">
+      <Drawer.Positioner class="w-md max-w-screen">
         <Drawer.Content>
           <Drawer.Header>
             <Drawer.Title>Settings</Drawer.Title>
             <Drawer.Description>Look and feel for this page</Drawer.Description>
-            <Drawer.CloseTrigger class="settingsDrawerClose">
+            <Drawer.CloseTrigger class="absolute top-3 right-4">
               <IconButton variant="ghost">
                 <XIcon />
               </IconButton>

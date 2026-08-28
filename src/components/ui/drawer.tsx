@@ -13,18 +13,33 @@ const Backdrop = withClass(ArkDialog.Backdrop, "drawer__backdrop")
 const CloseTrigger = withClass(ArkDialog.CloseTrigger, "drawer__closeTrigger")
 const Content = withClass(
   ArkDialog.Content,
-  "drawer__content drawer__content--variant_right"
+  "grid h-full w-full grid-cols-1 grid-rows-[auto_1fr_auto] bg-background shadow-(--shadows-lg) [grid-template-areas:'header'_'body'_'footer'] [&>:not([hidden])~:not([hidden])]:border-t [&>:not([hidden])~:not([hidden])]:border-border [[hidden]]:hidden [[open]]:animate-[slide-in-right_0.4s_var(--easing-emphasized-in)] data-open:animate-[slide-in-right_0.4s_var(--easing-emphasized-in)] data-[state=open]:animate-[slide-in-right_0.4s_var(--easing-emphasized-in)] [[closed]]:animate-[slide-out-right_0.2s_var(--easing-emphasized-out)] data-closed:animate-[slide-out-right_0.2s_var(--easing-emphasized-out)] data-[state=closed]:animate-[slide-out-right_0.2s_var(--easing-emphasized-out)]"
 )
-const Description = withClass(ArkDialog.Description, "drawer__description")
+const Description = withClass(
+  ArkDialog.Description,
+  "text-sm leading-5 text-muted-foreground"
+)
 const Positioner = withClass(
   ArkDialog.Positioner,
-  "drawer__positioner drawer__positioner--variant_right"
+  "fixed top-0 right-0 z-1400 flex h-dvh items-center justify-center"
 )
-const Title = withClass(ArkDialog.Title, "drawer__title")
+const Title = withClass(
+  ArkDialog.Title,
+  "text-xl leading-7.5 font-semibold text-foreground"
+)
 const Trigger = withClass(ArkDialog.Trigger, "drawer__trigger")
-const Header = withClass(ark.div, "drawer__header")
-const Body = withClass(ark.div, "drawer__body")
-const Footer = withClass(ark.div, "drawer__footer")
+const Header = withClass(
+  ark.div,
+  "relative flex flex-col gap-1 p-4 [grid-area:header]"
+)
+const Body = withClass(
+  ark.div,
+  "flex flex-col overflow-auto p-6 [grid-area:body]"
+)
+const Footer = withClass(
+  ark.div,
+  "flex justify-end px-6 py-4 [grid-area:footer]"
+)
 
 export type DrawerRootProviderProps = ComponentProps<typeof RootProvider>
 export type DrawerRootProps = ComponentProps<typeof Root>

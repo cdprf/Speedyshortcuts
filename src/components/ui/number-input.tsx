@@ -2,23 +2,26 @@ import { NumberInput as ArkNumberInput } from "@ark-ui/solid"
 import { Show, children, type ComponentProps } from "solid-js"
 import { withClass } from "~/utils/with-class"
 
-const Root = withClass(ArkNumberInput.Root, "numberInput__root")
+const Root = withClass(ArkNumberInput.Root, "flex flex-col gap-1.5")
 const Control = withClass(
   ArkNumberInput.Control,
-  "numberInput__control numberInput__control--size_md"
+  "grid h-10 min-w-10 grid-cols-[1fr_32px] grid-rows-2 overflow-hidden rounded-lg border border-(--colors-border-default) ps-3 text-base transition-[border-color,box-shadow] duration-200 ease-(--easing-default) focus-within:border-primary focus-within:shadow-[0_0_0_1px_var(--colors-color-palette-default)]"
 )
 const DecrementTrigger = withClass(
   ArkNumberInput.DecrementTrigger,
-  "numberInput__decrementTrigger"
+  "inline-flex cursor-pointer items-center justify-center border-t border-s border-(--colors-border-default) text-muted-foreground transition-[background,color] duration-200 ease-(--easing-default) hover:bg-(--colors-gray-a2) hover:text-foreground [&_svg]:size-4"
 )
 const IncrementTrigger = withClass(
   ArkNumberInput.IncrementTrigger,
-  "numberInput__incrementTrigger"
+  "inline-flex cursor-pointer items-center justify-center border-s border-(--colors-border-default) text-muted-foreground transition-[background,color] duration-200 ease-(--easing-default) hover:bg-(--colors-gray-a2) hover:text-foreground [&_svg]:size-4"
 )
-const Input = withClass(ArkNumberInput.Input, "numberInput__input")
+const Input = withClass(
+  ArkNumberInput.Input,
+  "row-span-2 w-full border-0 bg-transparent outline-none"
+)
 const Label = withClass(
   ArkNumberInput.Label,
-  "numberInput__label numberInput__label--size_md"
+  "text-sm leading-5 font-medium text-foreground"
 )
 
 export type NumberInputProps = ComponentProps<typeof Root>

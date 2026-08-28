@@ -53,7 +53,7 @@ export const Button = (props: ButtonProps) => {
       >
         <>
           <ButtonSpinner />
-          <span class="button__loading-content">{localProps.children}</span>
+          <span class="opacity-0">{localProps.children}</span>
         </>
       </Show>
     </ark.button>
@@ -61,7 +61,7 @@ export const Button = (props: ButtonProps) => {
 }
 
 const ButtonSpinner = () => (
-  <span class="button__spinner-container">
-    <Spinner class="button__spinner" />
+  <span class="absolute top-1/2 inset-s-1/2 inline-grid -translate-x-1/2 -translate-y-1/2 place-items-center">
+    <Spinner class="size-[1.1em] border-[1.5px] border-t-(--colors-fg-disabled) border-r-(--colors-fg-disabled)" />
   </span>
 )

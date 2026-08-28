@@ -38,15 +38,21 @@ export const App = () => {
     const bgImg = bgImage()
     const bgCol = bgColor()
 
-    const bg = bgImg
-      ? `url(${bgImg})`
-      : bgCol
-        ? bgCol
-        : DEFAULT_VALUES.mainBackgroundColor
+    const backgroundColor = bgImg
+      ? "transparent"
+      : bgCol || DEFAULT_VALUES.mainBackgroundColor
+    const backgroundImage = bgImg ? `url(${bgImg})` : "none"
     const bgSize = bgImg ? "cover" : "auto"
     const bgPosition = bgImg ? "center" : "auto"
 
-    document.documentElement.style.setProperty("--app-background", bg)
+    document.documentElement.style.setProperty(
+      "--app-background-color",
+      backgroundColor
+    )
+    document.documentElement.style.setProperty(
+      "--app-background-image",
+      backgroundImage
+    )
     document.documentElement.style.setProperty("--app-background-size", bgSize)
     document.documentElement.style.setProperty(
       "--app-background-position",
@@ -55,7 +61,7 @@ export const App = () => {
   })
 
   return (
-    <div class="app">
+    <div class="grid h-full min-h-screen w-full grid-rows-[auto_1fr] place-items-center gap-2 bg-(--app-background-color,#2c2124) bg-no-repeat p-4 [background-image:var(--app-background-image,none)] bg-position-(--app-background-position,auto) bg-size-(--app-background-size,auto)">
       <Grid />
     </div>
   )

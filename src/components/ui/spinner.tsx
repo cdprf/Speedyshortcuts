@@ -2,7 +2,10 @@ import { ark } from "@ark-ui/solid"
 import { mergeProps, splitProps, type ComponentProps } from "solid-js"
 import { withClass } from "~/utils/with-class"
 
-const SpinnerRoot = withClass(ark.div, "spinner spinner--size_md")
+const SpinnerRoot = withClass(
+  ark.div,
+  "inline-block size-6 animate-spin rounded-full border-2 border-primary border-r-transparent border-b-transparent"
+)
 
 export type SpinnerProps = ComponentProps<typeof SpinnerRoot> & {
   /**

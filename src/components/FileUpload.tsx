@@ -99,29 +99,25 @@ export const FileUpload = (
           </>
         }
       >
-        <div class="currentImagePanel">
+        <div class="rounded-md border border-(--colors-border-emphasized) bg-subtle p-4">
           <div class="flex flex-col gap-3">
             <div class="flex items-center gap-2">
               <ImageIcon size={20} />
               <Text class="font-medium">Current background image</Text>
             </div>
 
-            <div class="currentImagePreview">
+            <div class="relative flex max-h-50 items-center justify-center overflow-hidden rounded-md border border-(--colors-border-default) bg-canvas">
               <img
+                class="max-h-50 max-w-full object-contain"
                 src={props.currentImage}
                 alt="Background preview"
-                style={{
-                  "max-width": "100%",
-                  "max-height": "200px",
-                  "object-fit": "contain",
-                }}
               />
               <IconButton
                 size="sm"
                 variant="outline"
                 onClick={handleRemove}
                 aria-label="Remove image"
-                class="currentImageRemove"
+                class="absolute top-2 right-2"
               >
                 <Trash2Icon />
               </IconButton>

@@ -47,7 +47,7 @@ export const InputModal = () => {
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content class="inputModalContent">
+          <Dialog.Content class="max-h-[calc(100vh-32px)] min-w-md overflow-y-auto p-4">
             <div class="mb-4 flex items-center justify-between">
               <Dialog.Title class="text-xl font-semibold">
                 {modalType()?.title}

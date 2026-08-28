@@ -19,6 +19,12 @@ interface P {
   showTitle: boolean
 }
 
+const gridItemActionClass =
+  "block h-full w-full cursor-pointer border-0 bg-transparent p-2 font-[inherit] text-inherit no-underline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-(--colors-gray-a9)"
+
+const gridItemImageClass =
+  "pointer-events-none h-full w-full select-none object-contain"
+
 export const GridItem = (props: P) => {
   const [target, setTarget] = createSignal<"_blank" | "_self">("_self")
 
@@ -32,19 +38,19 @@ export const GridItem = (props: P) => {
   })
 
   const itemContent = () => (
-    <div class="gridItemContent">
-      <div class="gridItemImgDiv">
+    <div class="flex h-full w-full flex-col items-center justify-evenly">
+      <div class="h-1/2 w-1/2 rounded-(--dial-radius,4px) p-2">
         <Show
           when={props.item.url}
           fallback={
             <FolderIconGlyph
               name={getFolderIcon(props.item.id)}
-              class="gridItemImg"
+              class={gridItemImageClass}
             />
           }
         >
           {(url) => (
-            <img class="gridItemImg" src={getFaviconUrl(url())} alt="" />
+            <img class={gridItemImageClass} src={getFaviconUrl(url())} alt="" />
           )}
         </Show>
       </div>
@@ -60,7 +66,7 @@ export const GridItem = (props: P) => {
         >
           <Tooltip.Trigger
             asChild={(triggerProps) => (
-              <span {...triggerProps} class="gridItemText">
+              <span {...triggerProps} class="w-full truncate text-center">
                 {props.item.title}
               </span>
             )}
@@ -85,7 +91,7 @@ export const GridItem = (props: P) => {
   )
 
   return (
-    <div class="gridItem">
+    <div class="group/gridItem relative h-full w-full cursor-pointer overflow-hidden rounded-(--dial-radius,4px) border border-(--colors-gray-a6) bg-(--colors-gray-a2) transition-all duration-250 ease-in-out hover:border-(--colors-gray-a7) hover:bg-(--colors-gray-a4) focus-within:border-(--colors-gray-a7) focus-within:bg-(--colors-gray-a4)">
       <ContextMenu
         item={props.item}
         openModal={props.openModal}
@@ -97,7 +103,7 @@ export const GridItem = (props: P) => {
         fallback={
           <button
             type="button"
-            class="gridItemAction"
+            class={gridItemActionClass}
             onClick={() => props.openFolder(props.item)}
             aria-label={`Open ${props.item.title} folder`}
             title={props.showTitle ? undefined : props.item.title}
@@ -108,7 +114,7 @@ export const GridItem = (props: P) => {
       >
         {(url) => (
           <a
-            class="gridItemAction"
+            class={gridItemActionClass}
             href={url()}
             draggable={false}
             target={target()}

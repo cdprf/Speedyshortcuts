@@ -137,7 +137,7 @@ export const Grid = () => {
       <InputModal />
       <SettingsDrawer />
 
-      <div class="toolbar">
+      <div class="flex w-full min-w-0 items-start justify-between gap-3">
         <FolderBreadcrumb />
 
         <div class="ml-auto flex shrink-0 items-center gap-2">
@@ -178,8 +178,8 @@ export const Grid = () => {
         <Show
           when={speedDials.length > 0}
           fallback={
-            <div class="emptyState">
-              <div class="emptyStateIcon">
+            <div class="flex min-w-[min(420px,calc(100vw-32px))] flex-col items-center self-center rounded-[18px] border border-dashed border-(--colors-gray-a7) bg-(--colors-gray-a2) px-8 py-10.5 text-center backdrop-blur-md animate-[fadeInAnimation_0.45s_ease-out] gap-1.5">
+              <div class="mb-1.5 grid size-13.5 place-items-center rounded-2xl border border-(--colors-gray-a6) bg-(--colors-gray-a3) text-(--colors-gray-11)">
                 <FolderOpenIcon size={28} />
               </div>
               <Text size="lg" class="font-semibold">
@@ -196,7 +196,7 @@ export const Grid = () => {
           }
         >
           <div
-            class="speedDialGrid"
+            class="grid grid-cols-[repeat(var(--grid-width,3),var(--dial-size,112px))] grid-rows-[repeat(var(--grid-height,3),var(--dial-size,112px))] gap-2 animate-[fadeInAnimation_0.75s_ease-in-out]"
             style={{
               "--grid-width": gridDimensions().width.toString(),
               "--grid-height": gridDimensions().height.toString(),
