@@ -5,7 +5,7 @@ import { storage } from "wxt/utils/storage"
 export const DEFAULT_VALUES = {
   gridColumns: undefined,
   dialSize: 112,
-  dialRadius: "sm",
+  dialRadius: "lg",
   showSpeedDialTitles: true,
   showAddNewButton: true,
   showSettingsButton: true,
@@ -13,7 +13,7 @@ export const DEFAULT_VALUES = {
   openLinksInNewTab: false,
   disableDragAndDrop: false,
   darkMode: true,
-  mainBackgroundColor: "#2c2124",
+  mainBackgroundColor: "#2C2124",
   mainBackgroundImage: undefined,
 }
 

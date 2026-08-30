@@ -1,9 +1,6 @@
-import { XIcon } from "lucide-solid"
 import { Show } from "solid-js"
-import { Portal } from "solid-js/web"
 import { Button } from "~/components/ui/button"
 import { Dialog } from "~/components/ui/dialog"
-import { IconButton } from "~/components/ui/icon-button"
 import { Input } from "~/components/ui/input"
 import { Text } from "~/components/ui/text"
 import {
@@ -26,6 +23,9 @@ import { FolderSelector } from "./FolderSelector"
 import { IconSelector } from "./IconSelector"
 
 export const InputModal = () => {
+  let titleInputRef: HTMLInputElement | undefined
+  let cancelButtonRef: HTMLButtonElement | undefined
+
   const handleSubmit = (event: SubmitEvent) => {
     event.preventDefault()
 
@@ -34,153 +34,158 @@ export const InputModal = () => {
     }
   }
 
+  const modalDescription = () =>
+    modalType()?.type === "DELETE"
+      ? "This action cannot be undone."
+      : modalType()?.description
+
   return (
-    <Dialog.Root
-      lazyMount
-      unmountOnExit
+    <Dialog
       open={isModalOpen()}
+      initialFocusEl={() =>
+        (modalType()?.type === "DELETE" ? cancelButtonRef : titleInputRef) ??
+        null
+      }
       onOpenChange={(e) => {
         setIsModalOpen(e.open)
       }}
       onExitComplete={closeModal}
     >
-      <Portal>
-        <Dialog.Backdrop />
-        <Dialog.Positioner>
-          <Dialog.Content class="max-h-[calc(100vh-32px)] min-w-md overflow-y-auto p-4">
-            <div class="mb-4 flex items-center justify-between">
-              <Dialog.Title class="text-xl font-semibold">
-                {modalType()?.title}
-              </Dialog.Title>
+      <Dialog.Content>
+        <Dialog.Header
+          title={modalType()?.title}
+          description={modalDescription()}
+        />
 
-              {/* <Dialog.CloseTrigger asChild> */}
-              <Dialog.CloseTrigger>
-                <IconButton size="sm" variant="ghost" aria-label="Close">
-                  <XIcon aria-hidden="true" />
-                </IconButton>
-              </Dialog.CloseTrigger>
-            </div>
-
-            <form class="w-full" onSubmit={handleSubmit}>
-              <div class="flex flex-col gap-4">
-                {modalType()?.type === "DELETE" ? (
-                  <Text size="lg" class="self-start">
-                    {modalItemKind() === "folder"
-                      ? "Delete this folder and everything inside it?"
-                      : modalType()?.description}
-                  </Text>
-                ) : (
-                  <>
-                    <Show when={modalType()?.type === "ADD"}>
-                      <div class="flex w-full flex-col items-stretch gap-2">
-                        <div
-                          class="flex w-full items-center gap-2"
-                          role="group"
-                          aria-label="Item type"
-                        >
-                          <Button
-                            type="button"
-                            class="min-w-0 flex-1"
-                            aria-pressed={modalItemKind() === "bookmark"}
-                            variant={
-                              modalItemKind() === "bookmark"
-                                ? "solid"
-                                : "outline"
-                            }
-                            onClick={() => setModalItemKind("bookmark")}
-                          >
-                            Speed dial
-                          </Button>
-                          <Button
-                            type="button"
-                            class="min-w-0 flex-1"
-                            aria-pressed={modalItemKind() === "folder"}
-                            variant={
-                              modalItemKind() === "folder" ? "solid" : "outline"
-                            }
-                            onClick={() => setModalItemKind("folder")}
-                          >
-                            Folder
-                          </Button>
-                        </div>
-                      </div>
-                    </Show>
-
+        <form class="contents" onSubmit={handleSubmit}>
+          <Dialog.Body>
+            <div class="flex flex-col gap-4">
+              {modalType()?.type === "DELETE" ? (
+                <Text size="lg" class="self-start">
+                  {modalItemKind() === "folder"
+                    ? "Delete this folder and everything inside it?"
+                    : modalType()?.description}
+                </Text>
+              ) : (
+                <>
+                  <Show when={modalType()?.type === "ADD"}>
                     <div class="flex w-full flex-col items-stretch gap-2">
-                      <label for="item-title" class="text-sm font-medium">
-                        Name
+                      <div
+                        class="flex w-full items-center gap-2"
+                        role="group"
+                        aria-label="Item type"
+                      >
+                        <Button
+                          type="button"
+                          class="min-w-0 flex-1"
+                          aria-pressed={modalItemKind() === "bookmark"}
+                          variant={
+                            modalItemKind() === "bookmark"
+                              ? "default"
+                              : "outline"
+                          }
+                          onClick={() => setModalItemKind("bookmark")}
+                        >
+                          Speed dial
+                        </Button>
+                        <Button
+                          type="button"
+                          class="min-w-0 flex-1"
+                          aria-pressed={modalItemKind() === "folder"}
+                          variant={
+                            modalItemKind() === "folder" ? "default" : "outline"
+                          }
+                          onClick={() => setModalItemKind("folder")}
+                        >
+                          Folder
+                        </Button>
+                      </div>
+                    </div>
+                  </Show>
+
+                  <div class="flex w-full flex-col items-stretch gap-2">
+                    <label for="item-title" class="text-sm font-medium">
+                      Name
+                    </label>
+                    <Input
+                      ref={(element) => (titleInputRef = element)}
+                      id="item-title"
+                      name="title"
+                      inputMode="text"
+                      type="text"
+                      placeholder={
+                        modalItemKind() === "folder" ? "Folder name" : "Name"
+                      }
+                      value={modalData()?.title || ""}
+                      onInput={handleModalDataChange}
+                    />
+                  </div>
+                  <Show when={modalItemKind() === "bookmark"}>
+                    <div class="flex w-full flex-col items-stretch gap-2">
+                      <label for="item-url" class="text-sm font-medium">
+                        URL
                       </label>
                       <Input
-                        id="item-title"
-                        name="title"
-                        inputMode="text"
-                        placeholder={
-                          modalItemKind() === "folder" ? "Folder name" : "Name"
-                        }
-                        value={modalData()?.title || ""}
+                        id="item-url"
+                        name="url"
+                        inputMode="url"
+                        type="url"
+                        placeholder="https://example.com"
+                        value={modalData()?.url || ""}
                         onInput={handleModalDataChange}
                       />
                     </div>
-                    <Show when={modalItemKind() === "bookmark"}>
-                      <div class="flex w-full flex-col items-stretch gap-2">
-                        <label for="item-url" class="text-sm font-medium">
-                          URL
-                        </label>
-                        <Input
-                          id="item-url"
-                          name="url"
-                          inputMode="url"
-                          placeholder="https://example.com"
-                          value={modalData()?.url || ""}
-                          onInput={handleModalDataChange}
-                        />
-                      </div>
-                    </Show>
-                    <Show
-                      when={
-                        modalItemKind() === "bookmark" && hasFolders()
-                          ? folderTree()
-                          : undefined
-                      }
-                    >
-                      {(root) => (
-                        <FolderSelector
-                          root={root()}
-                          value={modalData()?.parentId}
-                          onChange={setModalParentFolder}
-                        />
-                      )}
-                    </Show>
-                    <Show when={modalItemKind() === "folder"}>
-                      <IconSelector
-                        value={modalData()?.icon}
-                        onChange={setModalFolderIcon}
+                  </Show>
+                  <Show
+                    when={
+                      modalItemKind() === "bookmark" && hasFolders()
+                        ? folderTree()
+                        : undefined
+                    }
+                  >
+                    {(root) => (
+                      <FolderSelector
+                        root={root()}
+                        value={modalData()?.parentId}
+                        onChange={setModalParentFolder}
                       />
-                    </Show>
-                  </>
-                )}
+                    )}
+                  </Show>
+                  <Show when={modalItemKind() === "folder"}>
+                    <IconSelector
+                      value={modalData()?.icon}
+                      onChange={setModalFolderIcon}
+                    />
+                  </Show>
+                </>
+              )}
+            </div>
+          </Dialog.Body>
 
-                <div class="flex items-center gap-4 self-end">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => setIsModalOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-
-                  <Button
-                    type="submit"
-                    disabled={!isValid(modalType()?.type, modalData())}
-                  >
-                    {modalType()?.button}
-                  </Button>
-                </div>
-              </div>
-            </form>
-          </Dialog.Content>
-        </Dialog.Positioner>
-      </Portal>
-    </Dialog.Root>
+          <Dialog.Footer>
+            <Dialog.Close
+              asChild={(closeProps) => (
+                <Button
+                  {...closeProps()}
+                  ref={(element) => (cancelButtonRef = element)}
+                  variant="outline"
+                >
+                  Cancel
+                </Button>
+              )}
+            />
+            <Button
+              type="submit"
+              disabled={!isValid(modalType()?.type, modalData())}
+              variant={
+                modalType()?.type === "DELETE" ? "destructive" : "default"
+              }
+            >
+              {modalType()?.button}
+            </Button>
+          </Dialog.Footer>
+        </form>
+      </Dialog.Content>
+    </Dialog>
   )
 }

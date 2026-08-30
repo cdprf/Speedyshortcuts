@@ -1,25 +1,24 @@
-import { Tooltip, type TooltipRootProps } from "./ui/tooltip"
+import { splitProps, type ComponentProps, type JSX } from "solid-js"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  type TooltipRootProps,
+} from "./ui/tooltip"
 
-export const CustomTooltip = (
-  props: { content: string } & TooltipRootProps
-) => {
+type CustomTooltipProps = Omit<TooltipRootProps, "children"> & {
+  content: JSX.Element
+  class?: string
+  children: NonNullable<ComponentProps<typeof TooltipTrigger>["asChild"]>
+}
+
+export const CustomTooltip = (props: CustomTooltipProps) => {
+  const [local, rootProps] = splitProps(props, ["content", "class", "children"])
+
   return (
-    <Tooltip.Root
-      lazyMount
-      unmountOnExit
-      closeDelay={0}
-      openDelay={100}
-      closeOnClick={false}
-      closeOnPointerDown={false}
-      {...props}
-    >
-      <Tooltip.Trigger>{props.children}</Tooltip.Trigger>
-      <Tooltip.Positioner>
-        <Tooltip.Arrow>
-          <Tooltip.ArrowTip />
-        </Tooltip.Arrow>
-        <Tooltip.Content>{props.content}</Tooltip.Content>
-      </Tooltip.Positioner>
-    </Tooltip.Root>
+    <Tooltip {...rootProps}>
+      <TooltipTrigger asChild={local.children} />
+      <TooltipContent class={local.class}>{local.content}</TooltipContent>
+    </Tooltip>
   )
 }

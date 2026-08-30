@@ -1,7 +1,10 @@
 import { Show, createSignal, onMount } from "solid-js"
-import { Portal } from "solid-js/web"
 import { Text } from "~/components/ui/text"
-import { Tooltip } from "~/components/ui/tooltip"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip"
 import {
   type BookmarkDataType,
   getFolderIcon,
@@ -20,7 +23,7 @@ interface P {
 }
 
 const gridItemActionClass =
-  "block h-full w-full cursor-pointer border-0 bg-transparent p-2 font-[inherit] text-inherit no-underline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-(--colors-gray-a9)"
+  "block h-full w-full cursor-pointer border-0 bg-transparent p-2 font-[inherit] text-inherit no-underline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-ring"
 
 const gridItemImageClass =
   "pointer-events-none h-full w-full select-none object-contain"
@@ -56,42 +59,35 @@ export const GridItem = (props: P) => {
       </div>
 
       <Show when={props.showTitle}>
-        <Tooltip.Root
-          lazyMount
-          unmountOnExit
-          closeDelay={0}
-          openDelay={100}
+        <Tooltip
           positioning={{ placement: "bottom" }}
           closeOnPointerDown={false}
+          openDelay={150}
+          closeDelay={0}
         >
-          <Tooltip.Trigger
+          <TooltipTrigger
             asChild={(triggerProps) => (
-              <span {...triggerProps} class="w-full truncate text-center">
+              <span {...triggerProps()} class="w-full truncate text-center">
                 {props.item.title}
               </span>
             )}
           />
 
-          <Portal>
-            <Tooltip.Positioner>
-              <Tooltip.Arrow>
-                <Tooltip.ArrowTip />
-              </Tooltip.Arrow>
-              <Tooltip.Content class="w-max max-w-3xl text-center">
-                <Text>{props.item.title}</Text>
-                <Show when={props.item.url}>
-                  <Text>{props.item.url}</Text>
-                </Show>
-              </Tooltip.Content>
-            </Tooltip.Positioner>
-          </Portal>
-        </Tooltip.Root>
+          <TooltipContent class="w-max max-w-[min(48rem,calc(100vw-2rem))] text-center wrap-anywhere">
+            <Text size="sm" class="font-semibold">
+              {props.item.title}
+            </Text>
+            <Show when={props.item.url}>
+              <Text size="sm">{props.item.url}</Text>
+            </Show>
+          </TooltipContent>
+        </Tooltip>
       </Show>
     </div>
   )
 
   return (
-    <div class="group/gridItem relative h-full w-full cursor-pointer overflow-hidden rounded-(--dial-radius,4px) border border-(--colors-gray-a6) bg-(--colors-gray-a2) transition-all duration-250 ease-in-out hover:border-(--colors-gray-a7) hover:bg-(--colors-gray-a4) focus-within:border-(--colors-gray-a7) focus-within:bg-(--colors-gray-a4)">
+    <div class="group/gridItem relative h-full w-full cursor-pointer overflow-hidden rounded-(--dial-radius,4px) border border-foreground/15 bg-foreground/4 transition-[background-color,border-color] duration-200 ease-out hover:border-foreground/20 hover:bg-foreground/10 hover:text-foreground focus-within:border-ring focus-within:bg-foreground/10 focus-within:text-foreground">
       <ContextMenu
         item={props.item}
         openModal={props.openModal}

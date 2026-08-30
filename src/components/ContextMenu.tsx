@@ -6,7 +6,6 @@ import {
   Trash2Icon,
 } from "lucide-solid"
 import { createSignal } from "solid-js"
-import { Portal } from "solid-js/web"
 import { browser } from "wxt/browser"
 import { Menu } from "~/components/ui/menu"
 import type { BookmarkDataType, ModalTypes } from "~/stores"
@@ -47,12 +46,13 @@ export const ContextMenu = (props: P) => {
       unmountOnExit
       open={open()}
       onOpenChange={(e) => setOpen(e.open)}
+      positioning={{ placement: "bottom-start" }}
     >
       <Menu.Trigger
         asChild={(triggerProps) => (
           <button
             {...triggerProps}
-            class="absolute! top-2 right-2 z-1 cursor-pointer p-1 opacity-0 [transition:opacity_0.25s_ease-in-out,background-color_0.25s_ease-in-out] focus:opacity-100 data-[state=open]:opacity-100 group-hover/gridItem:opacity-100! group-hover/gridItem:[transition:opacity_0.25s_ease-in-out_0.4s,background-color_0.25s_ease-in-out]"
+            class="absolute! top-2 right-2 z-1 cursor-pointer p-1 opacity-0 [transition:opacity_0.25s_ease-in-out,background-color_0.25s_ease-in-out] focus:opacity-100 data-[state=open]:opacity-100 group-hover/gridItem:opacity-100! group-hover/gridItem:[transition:opacity_0.125s_ease-in-out_0.25s,background-color_0.25s_ease-in-out]"
             on:click={handleOpenMenu}
           />
         )}
@@ -60,57 +60,48 @@ export const ContextMenu = (props: P) => {
         <EllipsisVertical size={14} />
       </Menu.Trigger>
 
-      <Portal>
-        <Menu.Positioner>
-          <Menu.Content class="border border-(--colors-gray-a6)">
-            {!props.item?.url && (
-              <Menu.Item
-                id="open_in_new_tab"
-                value="open_in_new_tab"
-                onClick={openFolderLinks}
-              >
-                <div class="flex items-center gap-2">
-                  <FileStackIcon size={16} />
-                  Open all in new tabs
-                </div>
-              </Menu.Item>
-            )}
-
+      <Menu.Content>
+        <Menu.ItemGroup>
+          {!props.item?.url && (
             <Menu.Item
-              id="edit"
-              value="edit"
-              onClick={() => props.openModal("EDIT", props.item)}
+              id="open_in_new_tab"
+              value="open_in_new_tab"
+              onClick={openFolderLinks}
             >
-              <div class="flex items-center gap-2">
-                <PencilIcon size={16} />
-                Edit
-              </div>
+              <FileStackIcon aria-hidden="true" />
+              Open all in new tabs
             </Menu.Item>
+          )}
 
-            <Menu.Item
-              id="delete"
-              value="delete"
-              onClick={() => props.openModal("DELETE", props.item)}
-            >
-              <div class="flex items-center gap-2">
-                <Trash2Icon size={16} />
-                Delete
-              </div>
-            </Menu.Item>
+          <Menu.Item
+            id="edit"
+            value="edit"
+            onClick={() => props.openModal("EDIT", props.item)}
+          >
+            <PencilIcon aria-hidden="true" />
+            Edit
+          </Menu.Item>
 
-            <Menu.Item
-              id="duplicate"
-              value="duplicate"
-              onClick={() => props.duplicateSpeedDial(props.item)}
-            >
-              <div class="flex items-center gap-2">
-                <CopyPlusIcon size={16} />
-                Duplicate
-              </div>
-            </Menu.Item>
-          </Menu.Content>
-        </Menu.Positioner>
-      </Portal>
+          <Menu.Item
+            id="duplicate"
+            value="duplicate"
+            onClick={() => props.duplicateSpeedDial(props.item)}
+          >
+            <CopyPlusIcon aria-hidden="true" />
+            Duplicate
+          </Menu.Item>
+
+          <Menu.Item
+            id="delete"
+            value="delete"
+            variant="destructive"
+            onClick={() => props.openModal("DELETE", props.item)}
+          >
+            <Trash2Icon aria-hidden="true" />
+            Delete
+          </Menu.Item>
+        </Menu.ItemGroup>
+      </Menu.Content>
     </Menu.Root>
   )
 }

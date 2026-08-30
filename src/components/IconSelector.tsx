@@ -71,14 +71,14 @@ export const IconSelector = (props: IconSelectorProps) => {
         <label class="font-medium" for="folder-icon-search">
           Folder icon
         </label>
-        <span class="text-xs text-(--colors-gray-a11)">
+        <span class="text-xs text-muted-foreground">
           {filteredIcons().length.toLocaleString()} icons
         </span>
       </div>
 
       <div class="relative">
         <SearchIcon
-          class="pointer-events-none absolute top-1/2 left-3 z-1 -translate-y-1/2 text-(--colors-gray-a11)"
+          class="pointer-events-none absolute top-1/2 left-3 z-1 -translate-y-1/2 text-muted-foreground"
           size={16}
           aria-hidden="true"
         />
@@ -97,13 +97,13 @@ export const IconSelector = (props: IconSelectorProps) => {
       <Show
         when={visibleIcons().length > 0}
         fallback={
-          <div class="grid h-52 place-items-center rounded-md border border-dashed border-(--colors-gray-a7) p-4 text-center text-sm text-(--colors-gray-a11)">
+          <div class="grid h-52 place-items-center rounded-md border border-dashed border-border p-4 text-center text-sm text-muted-foreground">
             No icons match “{query().trim()}”
           </div>
         }
       >
         <div
-          class="grid h-52 grid-cols-[repeat(auto-fill,minmax(38px,1fr))] gap-1 overflow-y-auto rounded-lg border border-(--colors-gray-a6) bg-(--colors-gray-a2) p-1.5 [scrollbar-color:var(--colors-gray-a7)_transparent]"
+          class="grid h-52 grid-cols-[repeat(auto-fill,minmax(38px,1fr))] gap-1 overflow-y-auto rounded-lg border border-border bg-background p-1.5 [scrollbar-color:var(--border)_transparent]"
           role="group"
           aria-label="Folder icons"
         >
@@ -115,10 +115,10 @@ export const IconSelector = (props: IconSelectorProps) => {
                 <button
                   type="button"
                   class={cn(
-                    "grid aspect-square min-w-0 cursor-pointer place-items-center rounded-md border p-0 transition-[color,border-color,background-color] duration-150 hover:bg-(--colors-gray-a4) hover:text-(--colors-gray-12) focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-(--colors-gray-a9)",
+                    "grid aspect-square min-w-0 cursor-pointer place-items-center rounded-md border p-0 transition-[color,border-color,background-color] duration-150 hover:bg-accent hover:text-accent-foreground focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ring",
                     isSelected()
-                      ? "border-(--colors-gray-a9) bg-(--colors-gray-a5) text-(--colors-gray-12)"
-                      : "border-transparent bg-transparent text-(--colors-gray-11)"
+                      ? "border-ring bg-primary text-accent-foreground hover:bg-primary"
+                      : "border-transparent bg-transparent text-muted-foreground"
                   )}
                   aria-pressed={isSelected()}
                   aria-label={icon.label}
@@ -136,7 +136,7 @@ export const IconSelector = (props: IconSelectorProps) => {
               type="button"
               size="sm"
               variant="ghost"
-              class="col-span-full min-h-8.5 rounded-md border-0 bg-(--colors-gray-a3) text-[13px] font-medium text-(--colors-gray-a11) hover:bg-(--colors-gray-a5)! hover:text-(--colors-gray-12)"
+              class="col-span-full min-h-8.5 rounded-md border-0 bg-muted text-[13px] font-medium text-muted-foreground hover:bg-accent! hover:text-accent-foreground"
               onClick={() =>
                 setVisibleCount((count) => count + INITIAL_ICON_COUNT)
               }

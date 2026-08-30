@@ -48,7 +48,7 @@ Try Nice Speed Dials today and streamline your browsing experience!
 ### Future Plan:
 
 - Import and export speed dials
-- Better Keyboard accessibility
+- Folder specific customization
 - More features to come!
 
 ---

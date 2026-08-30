@@ -1,76 +1,175 @@
-import { NumberInput as ArkNumberInput } from "@ark-ui/solid"
-import { Show, children, type ComponentProps } from "solid-js"
-import { withClass } from "~/utils/with-class"
+import {
+  FieldLabel,
+  NumberInput as ArkNumberInput,
+  useNumberInputContext,
+} from "@ark-ui/solid"
+import { MinusIcon, PlusIcon } from "lucide-solid"
+import { splitProps, type ComponentProps } from "solid-js"
+import { cn } from "~/utils/cn"
+import { Button } from "./button"
+import { Input, type InputProps } from "./input"
 
-const Root = withClass(ArkNumberInput.Root, "flex flex-col gap-1.5")
-const Control = withClass(
-  ArkNumberInput.Control,
-  "grid h-10 min-w-10 grid-cols-[1fr_32px] grid-rows-2 overflow-hidden rounded-lg border border-(--colors-border-default) ps-3 text-base transition-[border-color,box-shadow] duration-200 ease-(--easing-default) focus-within:border-primary focus-within:shadow-[0_0_0_1px_var(--colors-color-palette-default)]"
-)
-const DecrementTrigger = withClass(
-  ArkNumberInput.DecrementTrigger,
-  "inline-flex cursor-pointer items-center justify-center border-t border-s border-(--colors-border-default) text-muted-foreground transition-[background,color] duration-200 ease-(--easing-default) hover:bg-(--colors-gray-a2) hover:text-foreground [&_svg]:size-4"
-)
-const IncrementTrigger = withClass(
-  ArkNumberInput.IncrementTrigger,
-  "inline-flex cursor-pointer items-center justify-center border-s border-(--colors-border-default) text-muted-foreground transition-[background,color] duration-200 ease-(--easing-default) hover:bg-(--colors-gray-a2) hover:text-foreground [&_svg]:size-4"
-)
-const Input = withClass(
-  ArkNumberInput.Input,
-  "row-span-2 w-full border-0 bg-transparent outline-none"
-)
-const Label = withClass(
-  ArkNumberInput.Label,
-  "text-sm leading-5 font-medium text-foreground"
-)
+export const useNumberInput = useNumberInputContext
 
-export type NumberInputProps = ComponentProps<typeof Root>
+export type NumberInputProps = ComponentProps<typeof ArkNumberInput.Root> &
+  Pick<InputProps, "size">
 
-export const NumberInput = (props: NumberInputProps) => {
-  const getChildren = children(() => props.children)
+export const NumberInputRoot = (props: NumberInputProps) => {
+  const [local, rest] = splitProps(props, ["size", "class"])
+  const size = () => local.size ?? "md"
 
   return (
-    <Root {...props}>
-      <Show when={getChildren()}>
-        <Label>{getChildren()}</Label>
-      </Show>
-      <Control>
-        <Input />
-        <IncrementTrigger>
-          <ChevronUpIcon />
-        </IncrementTrigger>
-        <DecrementTrigger>
-          <ChevronDownIcon />
-        </DecrementTrigger>
-      </Control>
-    </Root>
+    <ArkNumberInput.Root
+      {...rest}
+      class={cn(
+        "group/number-field flex w-full flex-col items-start gap-2",
+        "has-data-[slot=number-field-increment]:has-data-[slot=number-field-decrement]:**:data-[slot=number-field-input]:text-center",
+        local.class
+      )}
+      data-size={size()}
+      data-slot="number-field"
+    />
   )
 }
 
-const ChevronUpIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <title>Chevron Up Icon</title>
-    <path
-      fill="none"
-      stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-      d="m18 15l-6-6l-6 6"
-    />
-  </svg>
-)
+export const NumberInputGroup = (
+  props: ComponentProps<typeof ArkNumberInput.Control>
+) => {
+  const [local, rest] = splitProps(props, ["class"])
 
-const ChevronDownIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <title>Chevron Down Icon</title>
-    <path
-      fill="none"
-      stroke="currentColor"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-      d="m6 9l6 6l6-6"
+  return (
+    <ArkNumberInput.Control
+      {...rest}
+      class={cn(
+        "relative flex w-full justify-between",
+        "rounded-lg border border-input bg-transparent text-base shadow-xs/5 ring-ring/32 dark:bg-input/30",
+        "transition-shadow",
+        "focus-within:border-primary focus-within:ring-[3px] focus-within:ring-ring/32",
+        "data-disabled:pointer-events-none data-disabled:opacity-64",
+        "aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/24",
+        "dark:aria-invalid:border-destructive-foreground dark:aria-invalid:text-destructive-foreground dark:aria-invalid:ring-destructive-foreground/20",
+        "motion-reduce:transition-none!",
+        local.class
+      )}
+      data-slot="number-field-group"
     />
-  </svg>
-)
+  )
+}
+
+export const NumberInputDecrement = (
+  props: ComponentProps<typeof ArkNumberInput.DecrementTrigger>
+) => {
+  const [local, rest] = splitProps(props, ["class", "children"])
+
+  return (
+    <ArkNumberInput.DecrementTrigger
+      {...rest}
+      asChild={(triggerProps) => (
+        <Button {...triggerProps()} aria-label="Decrement" variant="ghost">
+          {local.children ?? <MinusIcon aria-hidden="true" />}
+        </Button>
+      )}
+      class={cn(
+        "relative flex h-8 shrink-0",
+        "in-data-[size=lg]:h-9 in-data-[size=sm]:h-7",
+        "cursor-pointer rounded-none rounded-s-[calc(var(--radius-lg)+1px)] text-foreground",
+        "pointer-coarse:after:absolute pointer-coarse:after:size-full pointer-coarse:after:min-h-11 pointer-coarse:after:min-w-11",
+        local.class
+      )}
+      data-slot="number-field-decrement"
+    />
+  )
+}
+
+export const NumberInputIncrement = (
+  props: ComponentProps<typeof ArkNumberInput.IncrementTrigger>
+) => {
+  const [local, rest] = splitProps(props, ["class", "children"])
+
+  return (
+    <ArkNumberInput.IncrementTrigger
+      {...rest}
+      asChild={(triggerProps) => (
+        <Button {...triggerProps()} aria-label="Increment" variant="ghost">
+          {local.children ?? <PlusIcon aria-hidden="true" />}
+        </Button>
+      )}
+      class={cn(
+        "relative flex h-8 shrink-0",
+        "in-data-[size=lg]:h-9 in-data-[size=sm]:h-7",
+        "cursor-pointer rounded-none rounded-e-[calc(var(--radius-lg)+1px)] text-foreground",
+        "pointer-coarse:after:absolute pointer-coarse:after:size-full pointer-coarse:after:min-h-11 pointer-coarse:after:min-w-11",
+        local.class
+      )}
+      data-slot="number-field-increment"
+    />
+  )
+}
+
+export const NumberInputInput = (props: ComponentProps<typeof Input>) => {
+  const [local, rest] = splitProps(props, ["size", "class"])
+
+  return (
+    <ArkNumberInput.Input
+      {...rest}
+      asChild={(inputProps) => (
+        <Input
+          {...inputProps()}
+          class={cn(
+            "h-8 grow tabular-nums",
+            "in-data-[size=lg]:h-9 in-data-[size=sm]:h-7",
+            "border-0 shadow-none ring-0",
+            "focus-visible:ring-0 aria-invalid:ring-0 data-invalid:ring-0",
+            "dark:bg-transparent",
+            local.class
+          )}
+        />
+      )}
+      data-slot="number-field-input"
+    />
+  )
+}
+
+export const NumberInputScrubber = (
+  props: ComponentProps<typeof ArkNumberInput.Scrubber>
+) => {
+  const [local, rest] = splitProps(props, ["class", "children"])
+
+  return (
+    <ArkNumberInput.Scrubber
+      {...rest}
+      asChild={(scrubberProps) => (
+        <ArkNumberInput.Label
+          {...scrubberProps()}
+          asChild={(labelProps) => (
+            <FieldLabel
+              {...labelProps()}
+              class="group/field-label peer/field-label flex w-fit gap-1 select-none font-medium text-xs leading-snug"
+              data-slot="field-label"
+            >
+              {local.children}
+            </FieldLabel>
+          )}
+        />
+      )}
+      class={cn("flex cursor-ew-resize", local.class)}
+      data-slot="number-field-scrubber"
+    />
+  )
+}
+
+export const NumberInputScrubArea = NumberInputScrubber
+
+export const NumberInput = Object.assign(NumberInputRoot, {
+  Root: NumberInputRoot,
+  Group: NumberInputGroup,
+  Control: NumberInputGroup,
+  Decrement: NumberInputDecrement,
+  DecrementTrigger: NumberInputDecrement,
+  Increment: NumberInputIncrement,
+  IncrementTrigger: NumberInputIncrement,
+  Input: NumberInputInput,
+  Scrubber: NumberInputScrubber,
+  ScrubArea: NumberInputScrubArea,
+  Context: ArkNumberInput.Context,
+})

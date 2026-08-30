@@ -1,3 +1,4 @@
+// TODO: make this better
 export const isUrlValid = (url: string) => {
   try {
     new URL(url)

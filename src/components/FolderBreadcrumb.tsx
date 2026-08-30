@@ -8,7 +8,7 @@ export const FolderBreadcrumb = () => {
   return (
     <Show when={folderPath().length > 1}>
       <nav
-        class="min-w-0 max-w-full rounded-full border border-(--colors-gray-a5) bg-(--colors-gray-a2) p-0.75 backdrop-blur-md"
+        class="min-w-0 max-w-full rounded-full border border-foreground/10 bg-foreground/4 p-0.75 backdrop-blur-md"
         aria-label="Folder path"
       >
         <ol class="m-0 flex min-w-0 list-none flex-wrap items-center p-0">
@@ -21,7 +21,7 @@ export const FolderBreadcrumb = () => {
                 <li class="flex min-w-0 items-center">
                   <Show when={!isHome()}>
                     <ChevronRightIcon
-                      class="shrink-0 text-(--colors-gray-a9)"
+                      class="shrink-0 text-muted-foreground"
                       size={14}
                       aria-hidden="true"
                     />
@@ -29,9 +29,9 @@ export const FolderBreadcrumb = () => {
                   <button
                     type="button"
                     class={cn(
-                      "inline-flex h-7.5 max-w-45 cursor-pointer items-center gap-1.5 rounded-full border-0 bg-transparent px-2.5 text-[13px] text-(--colors-gray-a11) transition-[color,background-color] duration-150 enabled:hover:bg-(--colors-gray-a4) enabled:hover:text-(--colors-gray-12) focus-visible:bg-(--colors-gray-a4) focus-visible:text-(--colors-gray-12) focus-visible:outline-none disabled:cursor-default",
+                      "inline-flex h-7.5 max-w-45 cursor-pointer items-center gap-1.5 rounded-full border-0 bg-transparent px-2.5 text-[13px] text-muted-foreground transition-[color,background-color] duration-150 enabled:hover:bg-foreground/8 enabled:hover:text-foreground focus-visible:bg-foreground/8 focus-visible:text-foreground focus-visible:outline-none disabled:cursor-default",
                       isCurrent() &&
-                        "bg-(--colors-gray-a4) text-(--colors-gray-12) opacity-100"
+                        "bg-foreground/8 text-foreground opacity-100"
                     )}
                     aria-current={isCurrent() ? "page" : undefined}
                     disabled={isCurrent()}

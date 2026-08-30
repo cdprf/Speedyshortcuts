@@ -1,28 +1,19 @@
-import { ark } from "@ark-ui/solid"
-import { mergeProps, splitProps, type ComponentProps } from "solid-js"
-import { withClass } from "~/utils/with-class"
+import { LoaderCircleIcon } from "lucide-solid"
+import { splitProps, type ComponentProps } from "solid-js"
+import { cn } from "~/utils/cn"
 
-const SpinnerRoot = withClass(
-  ark.div,
-  "inline-block size-6 animate-spin rounded-full border-2 border-primary border-r-transparent border-b-transparent"
-)
-
-export type SpinnerProps = ComponentProps<typeof SpinnerRoot> & {
-  /**
-   * For accessibility, it is important to add a fallback loading text.
-   * This text will be visible to screen readers.
-   * @default "Loading..."
-   */
-  label?: string
-}
+export type SpinnerProps = ComponentProps<typeof LoaderCircleIcon>
 
 export const Spinner = (props: SpinnerProps) => {
-  const [_localProps, rootProps] = splitProps(props, ["label"])
-  const localProps = mergeProps({ label: "Loading..." }, _localProps)
+  const [localProps, rootProps] = splitProps(props, ["aria-label", "class"])
 
   return (
-    <SpinnerRoot {...rootProps}>
-      <span class="sr-only">{localProps.label}</span>
-    </SpinnerRoot>
+    <LoaderCircleIcon
+      aria-label={localProps["aria-label"] ?? "Loading"}
+      class={cn("size-4 animate-spin", localProps.class)}
+      data-slot="spinner"
+      role="status"
+      {...rootProps}
+    />
   )
 }

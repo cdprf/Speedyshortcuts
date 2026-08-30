@@ -1,23 +1,22 @@
-import { ark } from "@ark-ui/solid"
-import { splitProps, type ComponentProps } from "solid-js"
-import { cn } from "~/utils/cn"
-import { buttonClass, type ButtonSize, type ButtonVariant } from "./button"
+import { splitProps } from "solid-js"
+import { Button, type ButtonProps, type ButtonVariant } from "./button"
 
-export type IconButtonProps = ComponentProps<typeof ark.button> & {
+type LegacyIconButtonSize = "xs" | "sm" | "md" | "lg" | "xl"
+
+export type IconButtonProps = Omit<ButtonProps, "size" | "variant"> & {
   variant?: ButtonVariant
-  size?: ButtonSize
+  size?: LegacyIconButtonSize
 }
 
 export const IconButton = (props: IconButtonProps) => {
   const [local, rest] = splitProps(props, ["class", "variant", "size"])
 
   return (
-    <ark.button
+    <Button
       {...rest}
-      class={cn(
-        buttonClass(local.variant, local.size, true),
-        local.class as string | undefined
-      )}
+      class={local.class}
+      size={`icon-${local.size ?? "md"}`}
+      variant={local.variant}
     />
   )
 }

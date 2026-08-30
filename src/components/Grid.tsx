@@ -12,6 +12,7 @@ import {
   speedDials,
   setIsSettingDrawerOpen,
   isSpeedDialsLoaded,
+  folderPath,
   gridColumns,
   dialSize,
   dialRadius,
@@ -24,7 +25,6 @@ import {
 } from "~/stores"
 import { GridItem, InputModal, SettingsDrawer } from "./"
 import { getGridDimensions } from "~/utils"
-import { IconButton } from "./ui/icon-button"
 import { CustomTooltip } from "./CustomTooltip"
 import { Button } from "./ui/button"
 import { Text } from "./ui/text"
@@ -79,11 +79,13 @@ export const Grid = () => {
     disableDragAndDrop.watch(setCurrentDisableDragDrop)
   })
 
-  // Calculate grid dimensions with custom columns
+  // Custom columns only apply to the root speed-dials grid.
   const gridDimensions = () => {
+    const customColumns =
+      folderPath().length > 1 ? undefined : currentGridColumns()
     const { gridHeight: height, gridWidth: width } = getGridDimensions(
       speedDials.length,
-      currentGridColumns() || undefined
+      customColumns
     )
     return { height, width }
   }
@@ -92,7 +94,7 @@ export const Grid = () => {
   createEffect(() => {
     const size = currentDialSize()
     const radius = currentDialRadius()
-    const radiusToken = `var(--radii-${radius}, var(--radii-sm))`
+    const radiusToken = `var(--radius-${radius}, var(--radius-sm))`
 
     document.documentElement.style.setProperty("--dial-size", `${size}px`)
     document.documentElement.style.setProperty("--dial-radius", radiusToken)
@@ -143,20 +145,33 @@ export const Grid = () => {
         <div class="ml-auto flex shrink-0 items-center gap-2">
           <Show when={currentShowAddNew()}>
             <CustomTooltip content="Add New">
-              <IconButton variant="outline" onClick={() => openModal("ADD")}>
-                <PlusIcon size={20} />
-              </IconButton>
+              {(triggerProps) => (
+                <Button
+                  {...triggerProps()}
+                  aria-label="Add new speed dial"
+                  size="icon-md"
+                  variant="translucent"
+                  onClick={() => openModal("ADD")}
+                >
+                  <PlusIcon aria-hidden="true" />
+                </Button>
+              )}
             </CustomTooltip>
           </Show>
 
           <Show when={currentShowSettings()}>
             <CustomTooltip content="Settings">
-              <IconButton
-                variant="outline"
-                onClick={() => setIsSettingDrawerOpen(true)}
-              >
-                <SettingsIcon size={20} />
-              </IconButton>
+              {(triggerProps) => (
+                <Button
+                  {...triggerProps()}
+                  aria-label="Open settings"
+                  size="icon-md"
+                  variant="translucent"
+                  onClick={() => setIsSettingDrawerOpen(true)}
+                >
+                  <SettingsIcon aria-hidden="true" />
+                </Button>
+              )}
             </CustomTooltip>
           </Show>
 
@@ -178,8 +193,8 @@ export const Grid = () => {
         <Show
           when={speedDials.length > 0}
           fallback={
-            <div class="flex min-w-[min(420px,calc(100vw-32px))] flex-col items-center self-center rounded-[18px] border border-dashed border-(--colors-gray-a7) bg-(--colors-gray-a2) px-8 py-10.5 text-center backdrop-blur-md animate-[fadeInAnimation_0.45s_ease-out] gap-1.5">
-              <div class="mb-1.5 grid size-13.5 place-items-center rounded-2xl border border-(--colors-gray-a6) bg-(--colors-gray-a3) text-(--colors-gray-11)">
+            <div class="flex min-w-[min(420px,calc(100vw-32px))] flex-col items-center self-center gap-1.5 rounded-2xl  border border-foreground/15 bg-foreground/2 px-8 py-10.5 text-center animate-[fadeInAnimation_0.45s_ease-out] border-dashed">
+              <div class="mb-1.5 grid size-13.5 place-items-center rounded-lg border border-foreground/15 bg-foreground/8 text-muted-foreground">
                 <FolderOpenIcon size={28} />
               </div>
               <Text size="lg" class="font-semibold">
@@ -189,7 +204,7 @@ export const Grid = () => {
                 Add a speed dial or create another folder here.
               </Text>
               <Button class="mt-2" onClick={() => openModal("ADD")}>
-                <PlusIcon size={18} />
+                <PlusIcon aria-hidden="true" />
                 Add an item
               </Button>
             </div>
@@ -208,8 +223,8 @@ export const Grid = () => {
               dragDisabled: currentDisableDragDrop,
               centreDraggedOnCursor: true,
               dropTargetStyle: {
-                outline: "2px dashed var(--colors-gray-a6)",
-                borderRadius: "4px",
+                outline: "2px dashed var(--muted-foreground)",
+                borderRadius: "8px",
               },
             }}
             on:consider={onDragConsider}
