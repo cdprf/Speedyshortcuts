@@ -133,6 +133,18 @@ export const SettingsDrawer = () => {
 
   const handleResetAll = async () => {
     await resetAllSettings()
+    setCurrentBgColor(DEFAULT_VALUES.mainBackgroundColor)
+    setCurrentBgImage(undefined)
+  }
+
+  const handleBackgroundReset = async () => {
+    // Update the visible state first so reset feels immediate.
+    setCurrentBgColor(DEFAULT_VALUES.mainBackgroundColor)
+    setCurrentBgImage(undefined)
+    await Promise.all([
+      resetSetting("mainBackgroundColor"),
+      resetSetting("mainBackgroundImage"),
+    ])
   }
 
   return (
@@ -152,10 +164,7 @@ export const SettingsDrawer = () => {
               title="Main background"
               subTitle="Image will be used if uploaded, else default/selected color will be used"
               showReset
-              onReset={() => {
-                resetSetting("mainBackgroundColor")
-                resetSetting("mainBackgroundImage")
-              }}
+              onReset={handleBackgroundReset}
             />
             <ColorPicker
               class="mt-4"
@@ -182,16 +191,19 @@ export const SettingsDrawer = () => {
                   const reader = new FileReader()
                   reader.onloadend = async () => {
                     const base64String = reader.result as string
+                    setCurrentBgImage(base64String || undefined)
                     await mainBackgroundImage.setValue(
                       base64String || undefined
                     )
                   }
                   reader.readAsDataURL(file)
                 } else {
+                  setCurrentBgImage(undefined)
                   await mainBackgroundImage.setValue(undefined)
                 }
               }}
               onRemove={async () => {
+                setCurrentBgImage(undefined)
                 await mainBackgroundImage.setValue(undefined)
               }}
             />

@@ -1,14 +1,18 @@
-import { CircleAlertIcon, XIcon } from "lucide-solid"
+import {
+  CircleAlertIcon,
+  ImageIcon,
+  Trash2Icon,
+  UploadIcon,
+} from "lucide-solid"
 import { Button } from "~/components/ui/button"
 import {
   FileUpload as SharkFileUpload,
   type FileUploadRootProps,
 } from "~/components/ui/file-upload"
 import { Alert } from "~/components/ui/alert"
-import { Show, createMemo } from "solid-js"
+import { Show, splitProps } from "solid-js"
 import { Text } from "~/components/ui/text"
 import type { FileUploadFileError } from "@ark-ui/solid/file-upload"
-import { Divider } from "./Divider"
 
 const errorMessages: Record<FileUploadFileError, string> = {
   TOO_MANY_FILES: "Too many files selected (max 1 allowed)",
@@ -26,21 +30,22 @@ export const FileUpload = (
     onRemove?: () => void
   }
 ) => {
-  const { onFilesChange, onRemove, currentImage, ...rest } = props
-  const currentImageFile = createMemo(
-    () => new File([], "background-image", { type: "image/png" })
-  )
+  const [local, rest] = splitProps(props, [
+    "onFilesChange",
+    "onRemove",
+    "currentImage",
+  ])
 
   const handleRemove = () => {
-    if (onRemove) {
-      onRemove()
-    } else if (onFilesChange) {
-      onFilesChange([])
+    if (local.onRemove) {
+      local.onRemove()
+    } else if (local.onFilesChange) {
+      local.onFilesChange([])
     }
   }
 
   const handleFileChange = (e: { acceptedFiles: File[] }) => {
-    onFilesChange?.(e.acceptedFiles)
+    local.onFilesChange?.(e.acceptedFiles)
   }
 
   return (
@@ -50,86 +55,103 @@ export const FileUpload = (
       {...rest}
       onFileChange={handleFileChange}
     >
-      <SharkFileUpload.Dropzone>
-        <SharkFileUpload.DropzoneIcon />
-        <SharkFileUpload.Title>Drop image here</SharkFileUpload.Title>
-        <div class="flex w-full items-center justify-center gap-2">
-          <Divider class="m-0!" />
-          <SharkFileUpload.Description>or</SharkFileUpload.Description>
-          <Divider class="m-0!" />
-        </div>
-        <SharkFileUpload.Trigger
-          asChild={(triggerProps) => (
-            <Button {...triggerProps()} size="sm">
-              Browse image
-            </Button>
-          )}
-        />
-        <SharkFileUpload.Helper>
-          Upload one image up to 1.5 MB.
-        </SharkFileUpload.Helper>
-
-        <SharkFileUpload.Context>
-          {(fileUpload) => (
-            <Show when={fileUpload().rejectedFiles[0]?.errors[0]} keyed>
-              {(error) => (
-                <Alert.Root class="mt-3" role="alert" variant="destructive">
-                  <CircleAlertIcon aria-hidden="true" />
-                  <Alert.Title>Upload Error</Alert.Title>
-                  <Alert.Description>
-                    <Text size="sm">
-                      {errorMessages[error] || `Unknown error: ${error}`}
-                    </Text>
-                  </Alert.Description>
-                </Alert.Root>
+      <Show
+        when={local.currentImage}
+        fallback={
+          <SharkFileUpload.Dropzone class="gap-3 py-7 transition-colors duration-200">
+            <SharkFileUpload.DropzoneIcon />
+            <div class="space-y-1">
+              <SharkFileUpload.Title>
+                Choose a background image
+              </SharkFileUpload.Title>
+              <SharkFileUpload.Description>
+                Drag it here, or browse your files
+              </SharkFileUpload.Description>
+            </div>
+            <SharkFileUpload.Trigger
+              asChild={(triggerProps) => (
+                <Button {...triggerProps()} size="sm">
+                  <UploadIcon aria-hidden="true" /> Browse image
+                </Button>
               )}
-            </Show>
-          )}
-        </SharkFileUpload.Context>
-      </SharkFileUpload.Dropzone>
-
-      <Show when={currentImage} fallback={<SharkFileUpload.List />}>
+            />
+            <SharkFileUpload.Helper>
+              PNG, JPG, WebP, or GIF, up to 1.5 MB.
+            </SharkFileUpload.Helper>
+          </SharkFileUpload.Dropzone>
+        }
+      >
         {(image) => (
-          <SharkFileUpload.ItemGroup class="flex flex-col gap-2">
-            <SharkFileUpload.Item
-              class="flex-1 items-start justify-start gap-4 rounded-xl border bg-card p-2 fade-in-0 slide-in-from-top-5 animate-in motion-reduce:animate-none!"
-              file={currentImageFile()}
-            >
-              <SharkFileUpload.ItemPreview class="size-12" type="image/*">
-                <img
-                  alt="Background preview"
-                  class="aspect-square size-full rounded-lg object-cover"
-                  src={image()}
-                />
-              </SharkFileUpload.ItemPreview>
-
-              <div class="min-w-0 flex-1 overflow-hidden">
-                <SharkFileUpload.ItemName>
-                  Current background image
-                </SharkFileUpload.ItemName>
-                <SharkFileUpload.ItemSize>Saved image</SharkFileUpload.ItemSize>
+          <section class="overflow-hidden rounded-xl border bg-card fade-in-0 slide-in-from-top-3 animate-in motion-reduce:animate-none!">
+            <div class="relative aspect-16/8 overflow-hidden bg-muted">
+              <img
+                alt="Current background image preview"
+                class="size-full object-cover"
+                src={image()}
+              />
+              <div class="absolute inset-0 bg-linear-to-t from-background/65 via-transparent to-transparent" />
+              <div class="absolute inset-x-3 bottom-3 flex items-center gap-2 text-xs font-medium text-white drop-shadow-sm">
+                <span class="flex size-7 items-center justify-center rounded-lg bg-background/80 text-foreground shadow-sm">
+                  <ImageIcon aria-hidden="true" class="size-3.5" />
+                </span>
+                Background image active
               </div>
+            </div>
 
-              <SharkFileUpload.Context>
-                {(fileUpload) => (
-                  <Button
-                    aria-label="Remove background image"
-                    class="me-auto rounded-lg hover:bg-destructive/10 hover:text-destructive rtl:ms-auto dark:hover:bg-destructive-foreground/10 dark:hover:text-destructive-foreground"
-                    onClick={() => {
-                      fileUpload().clearFiles()
-                      handleRemove()
-                    }}
-                    size="icon-xs"
-                    variant="ghost"
-                  >
-                    <XIcon aria-hidden="true" />
-                  </Button>
-                )}
-              </SharkFileUpload.Context>
-            </SharkFileUpload.Item>
-          </SharkFileUpload.ItemGroup>
+            <div class="flex items-center justify-between gap-3 p-3">
+              <div class="min-w-0">
+                <p class="font-medium text-sm">Custom image</p>
+                <p class="mt-0.5 text-muted-foreground text-xs">
+                  Replaces the background color while active.
+                </p>
+              </div>
+              <div class="flex shrink-0 items-center gap-1">
+                <SharkFileUpload.Trigger
+                  asChild={(triggerProps) => (
+                    <Button {...triggerProps()} size="sm" variant="outline">
+                      <UploadIcon aria-hidden="true" /> Replace
+                    </Button>
+                  )}
+                />
+                <SharkFileUpload.Context>
+                  {(fileUpload) => (
+                    <Button
+                      aria-label="Remove background image"
+                      class="hover:bg-destructive/10 hover:text-destructive dark:hover:bg-destructive-foreground/10 dark:hover:text-destructive-foreground"
+                      onClick={() => {
+                        fileUpload().clearFiles()
+                        handleRemove()
+                      }}
+                      size="icon-xs"
+                      variant="ghost"
+                    >
+                      <Trash2Icon aria-hidden="true" />
+                    </Button>
+                  )}
+                </SharkFileUpload.Context>
+              </div>
+            </div>
+          </section>
         )}
       </Show>
+
+      <SharkFileUpload.Context>
+        {(fileUpload) => (
+          <Show when={fileUpload().rejectedFiles[0]?.errors[0]} keyed>
+            {(error) => (
+              <Alert.Root role="alert" variant="destructive">
+                <CircleAlertIcon aria-hidden="true" />
+                <Alert.Title>Couldn’t use that image</Alert.Title>
+                <Alert.Description>
+                  <Text size="sm">
+                    {errorMessages[error] || `Unknown error: ${error}`}
+                  </Text>
+                </Alert.Description>
+              </Alert.Root>
+            )}
+          </Show>
+        )}
+      </SharkFileUpload.Context>
     </SharkFileUpload.Root>
   )
 }
