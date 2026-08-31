@@ -1,5 +1,5 @@
 import { createMemo, createSignal } from "solid-js"
-import { isUrlValid } from "~/utils"
+import { isUrlValid, normalizeUrl } from "~/utils"
 import {
   addNewSpeedDial,
   type BookmarkDataType,
@@ -21,6 +21,9 @@ export type ModalType = {
 export type SpeedDialKind = "bookmark" | "folder"
 
 export type ModalDataType = SpeedDialValues & { kind?: SpeedDialKind }
+
+export type ModalField = "title" | "url"
+export type ModalValidationErrors = Partial<Record<ModalField, string>>
 
 export const MODAL_TYPES = {
   ADD: {
@@ -45,23 +48,41 @@ export const MODAL_TYPES = {
 
 export type ModalTypes = keyof typeof MODAL_TYPES
 
+export const getModalValidationErrors = (
+  type?: ModalTypes,
+  data?: ModalDataType
+): ModalValidationErrors => {
+  const errors: ModalValidationErrors = {}
+
+  if (type !== "EDIT" && type !== "ADD") return errors
+
+  if (!data?.title?.trim()) {
+    errors.title = "Enter a name for this item."
+  }
+
+  if (data?.kind !== "folder") {
+    if (!data?.url?.trim()) {
+      errors.url = "Enter the address this speed dial should open."
+    } else if (!isUrlValid(data.url)) {
+      errors.url = "Enter a valid web address, such as https://example.com."
+    }
+  }
+
+  return errors
+}
+
 export const isValid = (type?: ModalTypes, data?: ModalDataType) => {
   if (type === "DELETE") {
     return !!data?.id
-  } else if (type === "EDIT" || type === "ADD") {
-    const hasRequiredIdentity = type === "EDIT" ? !!data?.id : true
-    const isFolder = data?.kind === "folder"
-
-    if (isFolder) return !!(hasRequiredIdentity && data?.title?.trim())
-
-    return !!(
-      hasRequiredIdentity &&
-      data?.title?.trim() &&
-      data?.url &&
-      isUrlValid(data.url)
-    )
   }
-  return false
+
+  if (type !== "EDIT" && type !== "ADD") return false
+
+  const hasRequiredIdentity = type !== "EDIT" || !!data?.id
+  return (
+    hasRequiredIdentity &&
+    !Object.keys(getModalValidationErrors(type, data)).length
+  )
 }
 
 const [isModalOpen, setIsModalOpen] = createSignal(false)
@@ -117,12 +138,17 @@ const setModalParentFolder = (parentId: string) => {
 const handleModalOnSubmit = () => {
   const type = modalType()?.type
   if (type && isValid(type, modalData())) {
+    const data = modalData()
+    const values = data?.url
+      ? { ...data, url: normalizeUrl(data.url) ?? data.url }
+      : data
+
     if (type === "DELETE") {
-      deleteSpeedDial(modalData())
+      deleteSpeedDial(values)
     } else if (type === "EDIT") {
-      editSpeedDial(modalData())
+      editSpeedDial(values)
     } else if (type === "ADD") {
-      addNewSpeedDial(modalData())
+      addNewSpeedDial(values)
     }
   }
 
