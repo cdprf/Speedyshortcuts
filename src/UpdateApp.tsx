@@ -65,7 +65,7 @@ export const UpdateApp = () => {
           <p class="mb-3 font-medium text-primary text-sm">NICE SPEED DIALS</p>
           <h1 class="max-w-xl font-heading font-semibold text-3xl tracking-tight sm:text-4xl">
             {latestRelease
-              ? `Updated to ${latestRelease.version}`
+              ? `${latestRelease.version} is here`
               : "Release notes"}
           </h1>
           <p class="mt-3 max-w-2xl text-base text-muted-foreground leading-6">
