@@ -3,6 +3,10 @@ import { storage } from "wxt/utils/storage"
 import { browser, type Browser } from "wxt/browser"
 import { addNewSpeedDial } from "~/stores"
 
+// TODO: Replace this with the production survey URL before the next release.
+const UNINSTALL_SURVEY_URL =
+  "https://example.com/nice-speed-dials-uninstall-survey"
+
 const toggleSettingsDrawer = storage.defineItem<boolean>(
   "local:toggleSettingsDrawer",
   { fallback: false }
@@ -10,6 +14,8 @@ const toggleSettingsDrawer = storage.defineItem<boolean>(
 
 export default defineBackground(() => {
   browser.runtime.onInstalled.addListener(async (details) => {
+    await browser.runtime.setUninstallURL(UNINSTALL_SURVEY_URL)
+
     if (details.reason !== "update" || import.meta.env.MODE === "development") {
       return
     }
