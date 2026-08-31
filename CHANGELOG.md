@@ -2,7 +2,7 @@
 
 See what is new and improved in each release of Nice Speed Dials.
 
-## v6 — Carbon (2026-08-23)
+## v6 — Carbon (2026-08-31)
 
 ### What's new
 
@@ -21,6 +21,7 @@ See what is new and improved in each release of Nice Speed Dials.
   review, and support options.
 - Leave a review or support ongoing development from Settings or the update
   page.
+- Share feedback through a short survey when uninstalling the extension.
 
 ### Improvements
 
@@ -28,12 +29,17 @@ See what is new and improved in each release of Nice Speed Dials.
   folders.
 - Forms can now be submitted with Enter and include clearer labels and controls
   for keyboard and assistive-technology users.
+- Invalid names and website addresses now show clearer inline error messages.
+- Refreshed the new tab page, themes, animations, and component styling for a
+  more consistent interface.
 - Improved the layout and responsiveness of the grid, folder navigation, and
   settings interface.
 
-### Big fixes
+### Fixes
 
 - Fixed browser context-menu errors and duplicate menu entries.
+- Prevented the browser's native link dragging from interfering when speed dials
+  are rearranged.
 - Fixed tooltips occasionally closing or becoming stuck unexpectedly.
 - Improved recovery when the Nice Speed Dials bookmark folder is moved, deleted,
   or changed outside the extension.
@@ -62,14 +68,14 @@ See what is new and improved in each release of Nice Speed Dials.
 - Made the extension more reliable when its bookmark folder is missing or has
   been deleted.
 
-### Big fixes
+### Fixes
 
 - Fixed tooltip behavior and several issues affecting the grid, dialogs, context
   menus, and settings.
 
 ## v4 — Beryllium (2023-07-22)
 
-### Big fixes
+### Fixes
 
 - Fixed speed dials not updating after bookmarks were created, edited, moved, or
   removed.
@@ -98,7 +104,7 @@ See what is new and improved in each release of Nice Speed Dials.
 
 - Improved grid performance.
 
-### Big fixes
+### Fixes
 
 - Fixed multiple copies of the Nice Speed Dials bookmark folder being created
   during startup.

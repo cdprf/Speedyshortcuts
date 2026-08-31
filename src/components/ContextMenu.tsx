@@ -52,6 +52,7 @@ export const ContextMenu = (props: P) => {
         asChild={(triggerProps) => (
           <button
             {...triggerProps}
+            aria-label={`Actions for ${props.item.title}`}
             class="absolute! top-2 right-2 z-1 cursor-pointer p-1 opacity-0 [transition:opacity_0.25s_ease-in-out,background-color_0.25s_ease-in-out] focus:opacity-100 data-[state=open]:opacity-100 group-hover/gridItem:opacity-100! group-hover/gridItem:[transition:opacity_0.125s_ease-in-out_0.25s,background-color_0.25s_ease-in-out]"
             on:click={handleOpenMenu}
           />

@@ -140,4 +140,4 @@ Please keep unrelated formatting, refactoring, dependency, and generated-file
 changes out of the pull request.
 
 By contributing, you agree that your contribution will be licensed under the
-same MIT license as the project.
+same GNU General Public License v3.0-only terms as the project.

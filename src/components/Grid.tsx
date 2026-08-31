@@ -146,11 +146,11 @@ export const Grid = () => {
 
         <div class="ml-auto flex shrink-0 items-center gap-2">
           <Show when={currentShowAddNew()}>
-            <CustomTooltip content="Add New">
+            <CustomTooltip content="Add an item">
               {(triggerProps) => (
                 <Button
                   {...triggerProps()}
-                  aria-label="Add new speed dial"
+                  aria-label="Add a speed dial or folder"
                   size="icon-md"
                   variant="translucent"
                   onClick={() => openModal("ADD")}
@@ -203,7 +203,7 @@ export const Grid = () => {
                 This folder is empty
               </Text>
               <Text size="sm" class="text-muted-foreground">
-                Add a speed dial or create another folder here.
+                Add a speed dial or folder to get started.
               </Text>
               <Button class="mt-2" onClick={() => openModal("ADD")}>
                 <PlusIcon aria-hidden="true" />

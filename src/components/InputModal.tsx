@@ -73,10 +73,35 @@ export const InputModal = () => {
     handleModalOnSubmit()
   }
 
-  const modalDescription = () =>
-    modalType()?.type === "DELETE"
-      ? "This action cannot be undone."
-      : modalType()?.description
+  const modalTitle = () => {
+    if (modalType()?.type === "ADD") return "Add an item"
+
+    const item = modalItemKind() === "folder" ? "folder" : "speed dial"
+    return modalType()?.type === "DELETE" ? `Delete ${item}` : `Edit ${item}`
+  }
+
+  const modalDescription = () => {
+    if (modalType()?.type === "ADD") return "Choose what to add to this folder."
+    if (modalType()?.type === "DELETE") return "This cannot be undone."
+
+    return modalItemKind() === "folder"
+      ? "Change the folder name or icon."
+      : "Change the name, web address, or folder."
+  }
+
+  const submitLabel = () => {
+    const item = modalItemKind() === "folder" ? "folder" : "speed dial"
+    if (modalType()?.type === "ADD") return `Add ${item}`
+    if (modalType()?.type === "DELETE") return `Delete ${item}`
+    return "Save changes"
+  }
+
+  const cancelLabel = () => {
+    if (modalType()?.type === "DELETE") {
+      return modalItemKind() === "folder" ? "Keep folder" : "Keep speed dial"
+    }
+    return modalType()?.type === "EDIT" ? "Discard changes" : "Cancel"
+  }
 
   return (
     <Dialog
@@ -91,10 +116,7 @@ export const InputModal = () => {
       onExitComplete={closeModal}
     >
       <Dialog.Content>
-        <Dialog.Header
-          title={modalType()?.title}
-          description={modalDescription()}
-        />
+        <Dialog.Header title={modalTitle()} description={modalDescription()} />
 
         <form class="contents" noValidate onSubmit={handleSubmit}>
           <Dialog.Body>
@@ -102,8 +124,8 @@ export const InputModal = () => {
               {modalType()?.type === "DELETE" ? (
                 <Text size="lg" class="self-start">
                   {modalItemKind() === "folder"
-                    ? "Delete this folder and everything inside it?"
-                    : modalType()?.description}
+                    ? `Delete "${modalData()?.title}" and everything inside it?`
+                    : `Delete "${modalData()?.title}"?`}
                 </Text>
               ) : (
                 <>
@@ -161,9 +183,6 @@ export const InputModal = () => {
                         name="title"
                         inputMode="text"
                         type="text"
-                        placeholder={
-                          modalItemKind() === "folder" ? "Folder name" : "Name"
-                        }
                         value={modalData()?.title || ""}
                         onInput={handleInput}
                         onBlur={() => validateField("title")}
@@ -175,7 +194,7 @@ export const InputModal = () => {
                     <Show when={modalItemKind() === "bookmark"}>
                       <Field required invalid={!!errors().url}>
                         <FieldLabel>
-                          URL
+                          Web address
                           <FieldRequiredIndicator />
                         </FieldLabel>
                         <Input
@@ -228,7 +247,7 @@ export const InputModal = () => {
                   ref={(element) => (cancelButtonRef = element)}
                   variant="outline"
                 >
-                  Cancel
+                  {cancelLabel()}
                 </Button>
               )}
             />
@@ -238,7 +257,7 @@ export const InputModal = () => {
                 modalType()?.type === "DELETE" ? "destructive" : "default"
               }
             >
-              {modalType()?.button}
+              {submitLabel()}
             </Button>
           </Dialog.Footer>
         </form>

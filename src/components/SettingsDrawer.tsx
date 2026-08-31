@@ -156,14 +156,14 @@ export const SettingsDrawer = () => {
       <Sheet.Content variant="inset">
         <Sheet.Header
           title="Settings"
-          description="Look and feel for this page"
+          description="Choose how your new tab looks and works."
         />
 
         <Sheet.Body>
           <section aria-labelledby="about-heading" class="space-y-3">
             <div>
               <Text id="about-heading" size="lg" class="font-bold">
-                About Nice Speed Dials
+                About
               </Text>
               <Text size="sm">
                 See what changed, share feedback, or support future updates.
@@ -178,7 +178,7 @@ export const SettingsDrawer = () => {
           <div>
             <SettingItemTitle
               title="Main background"
-              subTitle="Image will be used if uploaded, else default/selected color will be used"
+              subTitle="An uploaded image takes priority over the selected color."
               showReset
               onReset={handleBackgroundReset}
             />
@@ -194,7 +194,7 @@ export const SettingsDrawer = () => {
 
             <div class="flex items-center gap-2">
               <Divider />
-              <Text class="my-2 font-bold">OR</Text>
+              <Text class="my-2 font-bold">or</Text>
               <Divider />
             </div>
 
@@ -232,6 +232,7 @@ export const SettingsDrawer = () => {
             <div class="flex items-center justify-between gap-2">
               <SettingItemTitle title="Dark mode" />
               <Switch
+                aria-label="Dark mode"
                 checked={currentDarkMode()}
                 onCheckedChange={(e) => darkMode.setValue(e.checked)}
               />
@@ -243,8 +244,7 @@ export const SettingsDrawer = () => {
           <div>
             <SettingItemTitle
               title="Grid"
-              subTitle="Adjust number of columns (number of rows will be adjusted
-                accordingly depending on number of columns and dials)"
+              subTitle="Set the number of columns. Rows adjust automatically."
               showReset
               onReset={() => resetSetting("gridColumns")}
             />
@@ -275,7 +275,7 @@ export const SettingsDrawer = () => {
           <div>
             <SettingItemTitle
               title="Dial size"
-              subTitle="Adjust the size of dial"
+              subTitle="Set how much space each speed dial uses."
               showReset
               onReset={() => resetSetting("dialSize")}
             />
@@ -349,6 +349,7 @@ export const SettingsDrawer = () => {
             <div class="flex items-center justify-between gap-2">
               <SettingItemTitle title="Show speed dial titles" />
               <Switch
+                aria-label="Show speed dial titles"
                 checked={currentShowSpeedDialTitles()}
                 onCheckedChange={(e) => showSpeedDialTitles.setValue(e.checked)}
               />
@@ -359,8 +360,9 @@ export const SettingsDrawer = () => {
 
           <div>
             <div class="flex items-center justify-between gap-2">
-              <SettingItemTitle title="Show 'Add New' button" />
+              <SettingItemTitle title="Show Add button" />
               <Switch
+                aria-label="Show Add button"
                 checked={currentShowAddNew()}
                 onCheckedChange={(e) => showAddNewButton.setValue(e.checked)}
               />
@@ -372,10 +374,11 @@ export const SettingsDrawer = () => {
           <div>
             <div class="flex items-center justify-between gap-2">
               <SettingItemTitle
-                title="Show 'Settings' button"
-                info="You will be able to access the toogle settings via context menu (or right clicking) on this page"
+                title="Show Settings button"
+                info="You can still open Settings from the right-click menu on this page."
               />
               <Switch
+                aria-label="Show Settings button"
                 checked={currentShowSettings()}
                 onCheckedChange={(e) => showSettingsButton.setValue(e.checked)}
               />
@@ -398,8 +401,9 @@ export const SettingsDrawer = () => {
 
           <div>
             <div class="flex items-center justify-between gap-2">
-              <SettingItemTitle title="Open links in new tab by default" />
+              <SettingItemTitle title="Open links in a new tab" />
               <Switch
+                aria-label="Open links in a new tab"
                 checked={currentOpenLinksNewTab()}
                 onCheckedChange={(e) => openLinksInNewTab.setValue(e.checked)}
               />
@@ -410,8 +414,9 @@ export const SettingsDrawer = () => {
 
           <div>
             <div class="flex items-center justify-between gap-2">
-              <SettingItemTitle title="Disable drag and drop" />
+              <SettingItemTitle title="Turn off drag and drop" />
               <Switch
+                aria-label="Turn off drag and drop"
                 checked={currentDisableDragDrop()}
                 onCheckedChange={(e) => disableDragAndDrop.setValue(e.checked)}
               />
@@ -429,7 +434,7 @@ export const SettingsDrawer = () => {
           />
 
           <Button variant="outline" onClick={handleResetAll}>
-            <Undo2Icon aria-hidden="true" /> Reset all to Default
+            <Undo2Icon aria-hidden="true" /> Reset all settings
           </Button>
         </Sheet.Footer>
       </Sheet.Content>
@@ -473,7 +478,7 @@ const SettingItemTitle = (props: {
 
         <Show when={props.showReset}>
           <CustomTooltip
-            content="Reset to Default"
+            content="Reset to default"
             openDelay={0}
             positioning={{ placement: "top" }}
           >

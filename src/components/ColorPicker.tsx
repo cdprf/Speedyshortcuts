@@ -17,7 +17,7 @@ export const ColorPicker = (props: ColorPickerRootProps) => {
       class={cn("flex-col", local.class)}
       format={local.format ?? "hsla"}
     >
-      <ParkColorPicker.Label>Color Picker</ParkColorPicker.Label>
+      <ParkColorPicker.Label>Background color</ParkColorPicker.Label>
       <ParkColorPicker.Control>
         <ParkColorPicker.Input
           channel="hex"
@@ -48,7 +48,7 @@ export const ColorPicker = (props: ColorPickerRootProps) => {
 
         <div class="flex flex-col gap-1.5">
           <Text size="xs" class="font-medium text-foreground">
-            Saved Colors
+            Saved colors
           </Text>
           <ParkColorPicker.SwatchGroup class="gap-1.5">
             <For each={presets}>

@@ -1,7 +1,7 @@
 {
   "name": "nice-speed-dials-extension",
   "version": "5.0.0",
-  "license": "MIT",
+  "license": "GPL-3.0-only",
   "keywords": [
     "browser",
     "extension",
@@ -17,7 +17,7 @@
     "type": "git",
     "url": "git+https://github.com/kruzkasu223/nice-speed-dials-extension"
   },
-  "description": "Nice and Simple Speed Dials Extension for Browser",
+  "description": "A fast, calm, and customizable new-tab page powered by your browser bookmarks.",
   "type": "module",
   "scripts": {
     "prepare": "wxt prepare",

@@ -15,12 +15,12 @@ import { Text } from "~/components/ui/text"
 import type { FileUploadFileError } from "@ark-ui/solid/file-upload"
 
 const errorMessages: Record<FileUploadFileError, string> = {
-  TOO_MANY_FILES: "Too many files selected (max 1 allowed)",
-  FILE_INVALID_TYPE: "Invalid file type (only images allowed)",
-  FILE_TOO_LARGE: "File too large (max 1.5MB)",
-  FILE_TOO_SMALL: "File too small",
-  FILE_INVALID: "Invalid file",
-  FILE_EXISTS: "File already exists",
+  TOO_MANY_FILES: "Choose one image at a time.",
+  FILE_INVALID_TYPE: "Choose an image file.",
+  FILE_TOO_LARGE: "Choose an image smaller than 1.5 MB.",
+  FILE_TOO_SMALL: "That image is empty. Choose another file.",
+  FILE_INVALID: "That image could not be read. Choose another file.",
+  FILE_EXISTS: "That image is already selected.",
 }
 
 export const FileUpload = (
@@ -62,16 +62,16 @@ export const FileUpload = (
             <SharkFileUpload.DropzoneIcon />
             <div class="space-y-1">
               <SharkFileUpload.Title>
-                Choose a background image
+                Upload a background image
               </SharkFileUpload.Title>
               <SharkFileUpload.Description>
-                Drag it here, or browse your files
+                Drop an image here or choose a file.
               </SharkFileUpload.Description>
             </div>
             <SharkFileUpload.Trigger
               asChild={(triggerProps) => (
                 <Button {...triggerProps()} size="sm">
-                  <UploadIcon aria-hidden="true" /> Browse image
+                  <UploadIcon aria-hidden="true" /> Choose image
                 </Button>
               )}
             />
@@ -94,7 +94,7 @@ export const FileUpload = (
                 <span class="flex size-7 items-center justify-center rounded-lg bg-background/80 text-foreground shadow-sm">
                   <ImageIcon aria-hidden="true" class="size-3.5" />
                 </span>
-                Background image active
+                Background image in use
               </div>
             </div>
 
@@ -144,7 +144,8 @@ export const FileUpload = (
                 <Alert.Title>Couldn’t use that image</Alert.Title>
                 <Alert.Description>
                   <Text size="sm">
-                    {errorMessages[error] || `Unknown error: ${error}`}
+                    {errorMessages[error] ||
+                      "That image could not be read. Choose another file."}
                   </Text>
                 </Alert.Description>
               </Alert.Root>

@@ -5,7 +5,7 @@
 <h1 align="center">Nice Speed Dials</h1>
 
 <p align="center">
-  A fast, calm, and customizable new-tab page powered by your browser bookmarks.
+  Open your favorite sites from a new tab built on browser bookmarks.
 </p>
 
 <p align="center">
@@ -20,29 +20,26 @@
   </a>
 </p>
 
-Nice Speed Dials replaces the default new-tab page with an organized launchpad
-for the sites you use most. Create speed dials, arrange them with drag and drop,
-group them into nested folders, and personalize the page without handing your
-bookmark data to a project-owned server.
+Nice Speed Dials replaces the default new-tab page with a grid of links you
+choose. Drag them into order, group them in folders, and adjust the layout or
+background to fit your setup.
 
-Your speed dials are real browser bookmarks. They remain visible in the browser
-bookmark manager and can follow you between devices when bookmark sync is
-enabled.
+Each speed dial is a browser bookmark. You can edit the same links in your
+browser's bookmark manager, and your browser can sync them between devices when
+bookmark sync is enabled.
 
-## Highlights
+## Features
 
-- Create, edit, duplicate, reorder, and delete speed dials.
-- Organize links in nested folders with clickable breadcrumb navigation.
-- Pick searchable Lucide icons for folders.
-- Open every link in a folder hierarchy at once.
-- Save the current webpage from the browser context menu.
-- Customize the background, grid columns, dial size, corner radius, title
-  visibility, dark mode, and link behavior.
-- Keep speed dials in browser bookmarks instead of a project-owned server.
-- Use keyboard-friendly dialogs and accessible controls.
-- Use the extension across Chrome, Firefox, and Edge.
+- Add, edit, copy, reorder, or delete a speed dial.
+- Sort links into nested folders and move through them with breadcrumbs.
+- Give each folder an icon from the built-in searchable library.
+- Open every link in a folder, including links in its subfolders.
+- Save the current page from the browser's right-click menu.
+- Change the background, grid, dial size, corner radius, title visibility, dark
+  mode, and link behavior.
+- Use the same bookmark-backed setup in Chrome, Firefox, or Edge.
 
-## How your data is stored
+## Bookmarks and privacy
 
 Nice Speed Dials creates and manages this folder in your browser bookmarks:
 
@@ -61,11 +58,14 @@ through the browser's bookmark manager are reflected in the extension as well.
 
 Speed-dial bookmarks can sync through the browser's bookmark-sync feature.
 Visual preferences and custom folder icons are kept in local extension storage.
-Nice Speed Dials does not operate a server for storing your speed-dial data.
+No Nice Speed Dials account is required, and the project does not run a server
+that stores your bookmarks.
 
-<!-- Firefox does not expose Chrome's built-in favicon API, so the Firefox build
-currently requests website icons from FaviconKit using the saved website's
-hostname. -->
+Firefox does not provide the favicon feature used by Chromium browsers. On
+Firefox, Nice Speed Dials sends the hostname of each saved site to FaviconKit so
+it can display that site's icon. The extension does not include analytics.
+
+Read the full [privacy policy](PRIVACY.md).
 
 ## Browser support
 
@@ -87,7 +87,7 @@ hostname. -->
 - Browser Bookmarks, Storage, Tabs, and Context Menus APIs for native browser
   integration.
 
-## Architecture at a glance
+## Architecture
 
 ```text
 New-tab page
@@ -100,9 +100,8 @@ Background entry point
   └─ browser context menus ──────────> bookmarks and settings
 ```
 
-The bookmark tree is the source of truth for speed dials. Components read from
-the stores, and the stores coordinate browser APIs and listen for bookmark
-changes made inside or outside the extension.
+The bookmark tree is the source of truth. The stores read it through browser
+APIs and listen for bookmark changes made inside or outside the extension.
 
 ## Local development
 
@@ -178,14 +177,13 @@ src/
 └── utils/            Shared utility functions
 ```
 
-Static extension assets live in `public`, while WXT and Tailwind CSS are
-configured from the files in the repository root. Store-facing copy is kept in
-`DESCRIPTION.md`, and user-facing release notes live in `CHANGELOG.md`.
+Static extension assets live in `public`. WXT and Tailwind CSS are configured
+from files in the repository root. Store copy is in `DESCRIPTION.md`; release
+notes are in `CHANGELOG.md`.
 
 ## Contributing
 
-Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for setup,
-coding guidelines, validation steps, and pull-request expectations.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
 - [Report a bug](https://github.com/kruzkasu223/nice-speed-dials-extension/issues/new)
 - [Request a feature](https://github.com/kruzkasu223/nice-speed-dials-extension/issues/new)
@@ -199,4 +197,5 @@ coding guidelines, validation steps, and pull-request expectations.
 
 ## License
 
-Nice Speed Dials is released under the MIT License.
+Nice Speed Dials is licensed under the
+[GNU General Public License v3.0 only](LICENSE).

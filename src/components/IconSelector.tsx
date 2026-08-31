@@ -72,7 +72,7 @@ export const IconSelector = (props: IconSelectorProps) => {
           Folder icon
         </label>
         <span class="text-xs text-muted-foreground">
-          {filteredIcons().length.toLocaleString()} icons
+          {filteredIcons().length.toLocaleString()} available
         </span>
       </div>
 
@@ -98,7 +98,7 @@ export const IconSelector = (props: IconSelectorProps) => {
         when={visibleIcons().length > 0}
         fallback={
           <div class="grid h-52 place-items-center rounded-md border border-dashed border-border p-4 text-center text-sm text-muted-foreground">
-            No icons match “{query().trim()}”
+            No icons found for "{query().trim()}".
           </div>
         }
       >
@@ -141,7 +141,7 @@ export const IconSelector = (props: IconSelectorProps) => {
                 setVisibleCount((count) => count + INITIAL_ICON_COUNT)
               }
             >
-              Show more
+              Show {Math.min(INITIAL_ICON_COUNT, remainingCount())} more
             </Button>
           </Show>
         </div>

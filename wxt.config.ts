@@ -24,7 +24,8 @@ export default defineConfig({
   }),
   manifest: (env) => ({
     name: "Nice Speed Dials",
-    description: "Nice and Simple Speed dials Extension for Browser",
+    description:
+      "A fast, calm, and customizable new-tab page powered by your browser bookmarks.",
     version: "5",
     version_name: "boron (v5)",
     permissions: [

@@ -28,21 +28,21 @@ export type ModalValidationErrors = Partial<Record<ModalField, string>>
 export const MODAL_TYPES = {
   ADD: {
     type: "ADD",
-    title: "Create",
-    button: "Create",
-    description: "Create a new speed dial",
+    title: "Add an item",
+    button: "Add",
+    description: "Choose what to add to this folder.",
   },
   EDIT: {
     type: "EDIT",
-    title: "Edit",
-    button: "Save",
-    description: "Edit the speed dial",
+    title: "Edit item",
+    button: "Save changes",
+    description: "Change this item's details.",
   },
   DELETE: {
     type: "DELETE",
-    title: "Delete",
+    title: "Delete item",
     button: "Delete",
-    description: "Are you sure you want to delete?",
+    description: "This cannot be undone.",
   },
 } as const
 
@@ -57,12 +57,15 @@ export const getModalValidationErrors = (
   if (type !== "EDIT" && type !== "ADD") return errors
 
   if (!data?.title?.trim()) {
-    errors.title = "Enter a name for this item."
+    errors.title =
+      data?.kind === "folder"
+        ? "Enter a folder name."
+        : "Enter a speed dial name."
   }
 
   if (data?.kind !== "folder") {
     if (!data?.url?.trim()) {
-      errors.url = "Enter the address this speed dial should open."
+      errors.url = "Enter a web address."
     } else if (!isUrlValid(data.url)) {
       errors.url = "Enter a valid web address, such as https://example.com."
     }

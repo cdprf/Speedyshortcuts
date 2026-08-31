@@ -1,6 +1,6 @@
 # Nice Speed Dials
 
-### Nice and Simple Speed Dials Extension for Browser
+### A fast, calm, and customizable new-tab page powered by your browser bookmarks.
 
 [Visit Chrome Web Store](https://chrome.google.com/webstore/detail/nice-speed-dials/igdancpfkcmgelecddchfeijbofdcnaa)
 
@@ -35,20 +35,21 @@ Try Nice Speed Dials today and streamline your browsing experience!
 - Sleek and intuitive interface
 - Create and organize speed dials
 - Create folders and organize speed dials in nested folder hierarchies
-- Navigate folders with a clickable breadcrumb path
-- Choose searchable Lucide icons for folders
-- Access speed dials from any new tab
+- Choose searchable icons for folders
+- Add to speed dials from any tab
 - Speed dials are stored in your browser bookmarks
 - Sync speed dials across multiple devices (if your browser sync is on)
 - Reorder speed dials via drag and drop
 - Keyboard accessibility
-- Options for customization
+- Many options for customization
 - Nice animation on any actions
 
 ### Future Plan:
 
-- Import and export speed dials
+- More options for customization
 - Folder specific customization
+- Language localization
+- Import and export speed dials
 - More features to come!
 
 ---

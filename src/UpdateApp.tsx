@@ -55,7 +55,7 @@ export const UpdateApp = () => {
   const latestRelease = releases[0]
 
   onMount(() => {
-    document.title = "What's New | Nice Speed Dials"
+    document.title = "Release notes | Nice Speed Dials"
   })
 
   return (
@@ -64,7 +64,9 @@ export const UpdateApp = () => {
         <header class="border-b border-border pb-8 sm:pb-10">
           <p class="mb-3 font-medium text-primary text-sm">NICE SPEED DIALS</p>
           <h1 class="max-w-xl font-heading font-semibold text-3xl tracking-tight sm:text-4xl">
-            {latestRelease ? `${latestRelease.version} is here` : "What’s new"}
+            {latestRelease
+              ? `Updated to ${latestRelease.version}`
+              : "Release notes"}
           </h1>
           <p class="mt-3 max-w-2xl text-base text-muted-foreground leading-6">
             A fresh round of improvements for the new tab you use every day.
@@ -80,16 +82,13 @@ export const UpdateApp = () => {
           class="py-8 sm:py-10"
           aria-labelledby="release-notes-title"
         >
-          <div class="mb-7 flex items-baseline justify-between gap-4">
+          <div class="mb-7">
             <h2
               id="release-notes-title"
               class="font-heading font-semibold text-xl"
             >
               Release notes
             </h2>
-            <p class="shrink-0 text-muted-foreground text-sm">
-              {releases.length} releases
-            </p>
           </div>
 
           <div class="overflow-hidden rounded-2xl border border-border bg-background/88 shadow-sm/5">
