@@ -100,7 +100,7 @@ export const UpdateApp = () => {
                   classList={{ "border-t border-border": releaseIndex() > 0 }}
                 >
                   <header class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                    <h3 class="font-heading font-semibold text-xl tracking-tight">
+                    <h3 class="font-heading font-semibold text-xl tracking-tight text-primary">
                       {release.version}
                     </h3>
                     <time class="text-muted-foreground text-sm">
