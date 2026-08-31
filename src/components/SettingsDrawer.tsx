@@ -1,5 +1,14 @@
-import { InfoIcon, RotateCcwIcon, Undo2Icon } from "lucide-solid"
+import {
+  ExternalLinkIcon,
+  HandHeartIcon,
+  InfoIcon,
+  RotateCcwIcon,
+  StarIcon,
+  Undo2Icon,
+} from "lucide-solid"
+import { browser } from "wxt/browser"
 import { Button } from "~/components/ui/button"
+import { Dialog } from "~/components/ui/dialog"
 import { Sheet } from "~/components/ui/sheet"
 import { Text } from "~/components/ui/text"
 import {
@@ -50,7 +59,19 @@ const RADII = [
   "4xl",
 ] as const
 
+const REVIEW_URLS = {
+  chrome:
+    "https://chromewebstore.google.com/detail/nice-speed-dials/igdancpfkcmgelecddchfeijbofdcnaa/reviews",
+  edge: "https://microsoftedge.microsoft.com/addons/detail/nice-speed-dials/ipdcfhnakfnmchdkpboeakmijafmgnjm",
+  firefox:
+    "https://addons.mozilla.org/en-US/firefox/addon/nice-speed-dials/reviews/",
+} as const
+
+const SUPPORT_URL = "https://buymeacoffee.com/nsde"
+
 export const SettingsDrawer = () => {
+  const [isSupportDialogOpen, setIsSupportDialogOpen] = createSignal(false)
+
   // Reactive signals for settings
   const [currentGridColumns, setCurrentGridColumns] = createSignal<
     number | undefined
@@ -147,6 +168,20 @@ export const SettingsDrawer = () => {
     ])
   }
 
+  const openExternalPage = async (url: string) => {
+    await browser.tabs.create({ url, active: true })
+  }
+
+  const openReviewPage = async () => {
+    const browserName = import.meta.env.BROWSER as keyof typeof REVIEW_URLS
+    await openExternalPage(REVIEW_URLS[browserName] ?? REVIEW_URLS.chrome)
+  }
+
+  const openSupportPage = async () => {
+    setIsSupportDialogOpen(false)
+    await openExternalPage(SUPPORT_URL)
+  }
+
   return (
     <Sheet.Root
       open={isSettingDrawerOpen()}
@@ -159,6 +194,61 @@ export const SettingsDrawer = () => {
         />
 
         <Sheet.Body>
+          <section aria-labelledby="community-heading" class="space-y-3">
+            <div>
+              <Text id="community-heading" size="lg" class="font-bold">
+                Enjoying Nice Speed Dials?
+              </Text>
+              <Text size="sm">
+                A quick rating or a contribution helps keep the extension
+                moving.
+              </Text>
+            </div>
+
+            <div class="flex flex-wrap gap-2">
+              <Button variant="outline" onClick={openReviewPage}>
+                <StarIcon aria-hidden="true" /> Leave a review
+              </Button>
+              <Button onClick={() => setIsSupportDialogOpen(true)}>
+                <HandHeartIcon aria-hidden="true" /> Support development
+              </Button>
+            </div>
+          </section>
+
+          <Dialog.Root
+            open={isSupportDialogOpen()}
+            onOpenChange={(e) => setIsSupportDialogOpen(e.open)}
+          >
+            <Dialog.Content size="sm">
+              <Dialog.Header
+                title="Keep Nice Speed Dials moving"
+                description="A small contribution gives this independent project more room to improve."
+              />
+              <Dialog.Body>
+                <Text>
+                  If Nice Speed Dials makes your new tab a little calmer or
+                  faster, supporting its development is a lovely way to help.
+                  Every contribution goes toward future updates and polish.
+                </Text>
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Dialog.Close
+                  asChild={(closeProps) => (
+                    <Button {...closeProps()} variant="outline">
+                      Maybe later
+                    </Button>
+                  )}
+                />
+                <Button onClick={openSupportPage}>
+                  <HandHeartIcon aria-hidden="true" /> Support the project
+                  <ExternalLinkIcon aria-hidden="true" />
+                </Button>
+              </Dialog.Footer>
+            </Dialog.Content>
+          </Dialog.Root>
+
+          <Divider />
+
           <div>
             <SettingItemTitle
               title="Main background"
@@ -401,45 +491,8 @@ export const SettingsDrawer = () => {
               />
             </div>
           </div>
-
-          {/* <Divider />
-            <Divider />
-
-            <div>
-              <Flex justify="space-between" align="center">
-                <SettingItemTitle title="Sync the settings across all devices" />
-
-                <Switch></Switch>
-              </Flex>
-            </div> */}
-
-          {/* <Divider />
-
-            <div>
-              <SettingItemTitle
-                title="Like Using Nice Speed Dials?"
-                subTitle="Give us a rating "
-              />
-
-              <div>
-                <Button mt="4">Rate</Button>
-              </div>
-            </div>
-
-            <Divider />
-
-            <div>
-              <SettingItemTitle
-                title="Like Using Nice Speed Dials?"
-                subTitle="Donate a cup of coffee or a tea to help support the development
-                of this extension"
-              />
-
-              <div>
-                <Button mt="4">Donate button here</Button>
-              </div>
-            </div> */}
         </Sheet.Body>
+
         <Sheet.Footer class="gap-3">
           <Sheet.Close
             asChild={(closeProps) => (
