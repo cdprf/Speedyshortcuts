@@ -41,7 +41,6 @@ export default defineBackground(() => {
 
     if (info.menuItemId === "addToSpeedDials") {
       if (!tab?.url) return
-      console.log("info", info)
       await addNewSpeedDial({
         title: tab?.title ?? new URL(tab.url).hostname,
         url: tab.url,
@@ -69,8 +68,18 @@ export default defineBackground(() => {
         title: "Add to Speed Dials",
         id: "addToSpeedDials",
         contexts: ["all"],
-        // TODO: we want it for all url except for the extension's own pages
-        documentUrlPatterns: ["<all_urls>"],
+        documentUrlPatterns: [
+          "<all_urls>",
+          // not working in firefox
+          // "http://*/*",
+          // "https://*/*",
+          // "file:///*",
+          // "ftp://*/*",
+          // "mailto:*",
+          // "tel:*",
+          // "ws://*/*",
+          // "wss://*/*",
+        ],
       })
     })
   } catch {}

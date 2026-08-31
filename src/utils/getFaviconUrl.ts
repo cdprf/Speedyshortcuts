@@ -2,6 +2,7 @@ import { browser } from "wxt/browser"
 
 export const getFaviconUrl = (url?: string) => {
   if (!url) return ""
+  // https://bugzilla.mozilla.org/show_bug.cgi?id=1315616
   if (import.meta.env.BROWSER === "firefox") return getFaviconUrlExternal(url)
   try {
     return `chrome-extension://${
@@ -12,7 +13,6 @@ export const getFaviconUrl = (url?: string) => {
   }
 }
 
-// TODO: add support for other browsers without external API
 const getFaviconUrlExternal = (url: string) => {
   return `https://ico.faviconkit.net/favicon/${new URL(url).host}`
 }
