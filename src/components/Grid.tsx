@@ -59,7 +59,7 @@ export const Grid = () => {
 
   // Load settings on mount
   onMount(async () => {
-    setCurrentGridColumns((await gridColumns.getValue()) || undefined)
+    setCurrentGridColumns((await gridColumns.getValue()) ?? undefined)
     setCurrentDialSize(await dialSize.getValue())
     setCurrentDialRadius(await dialRadius.getValue())
     setCurrentShowSpeedDialTitles(await showSpeedDialTitles.getValue())
@@ -69,7 +69,9 @@ export const Grid = () => {
     setCurrentDisableDragDrop(await disableDragAndDrop.getValue())
 
     // Watch for changes
-    gridColumns.watch(setCurrentGridColumns)
+    // WXT emits null when an optional storage item is removed. Normalize it to
+    // undefined so the grid falls back to its automatically calculated width.
+    gridColumns.watch((value) => setCurrentGridColumns(value ?? undefined))
     dialSize.watch(setCurrentDialSize)
     dialRadius.watch(setCurrentDialRadius)
     showSpeedDialTitles.watch(setCurrentShowSpeedDialTitles)

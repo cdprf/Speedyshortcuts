@@ -7,7 +7,13 @@ export const getGridDimensions = (
   let gridWidth: number
   let gridHeight: number
 
-  if (customColumns !== undefined) {
+  // Missing optional storage values can arrive as null at runtime. Treat any
+  // invalid value as automatic sizing instead of producing an unusable grid.
+  if (
+    typeof customColumns === "number" &&
+    Number.isFinite(customColumns) &&
+    customColumns >= 1
+  ) {
     gridWidth = customColumns
     gridHeight = Math.max(1, Math.ceil(listLength / gridWidth))
   } else {

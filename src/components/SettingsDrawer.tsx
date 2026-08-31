@@ -90,7 +90,7 @@ export const SettingsDrawer = () => {
 
   // Load settings on mount
   onMount(async () => {
-    setCurrentGridColumns(await gridColumns.getValue())
+    setCurrentGridColumns((await gridColumns.getValue()) ?? undefined)
     setCurrentDialSize(await dialSize.getValue())
     setCurrentDialRadius(await dialRadius.getValue())
     setCurrentShowSpeedDialTitles(await showSpeedDialTitles.getValue())
@@ -104,7 +104,7 @@ export const SettingsDrawer = () => {
     setCurrentBgImage(await mainBackgroundImage.getValue())
 
     // Watch for changes
-    gridColumns.watch(setCurrentGridColumns)
+    gridColumns.watch((value) => setCurrentGridColumns(value ?? undefined))
     dialSize.watch(setCurrentDialSize)
     dialRadius.watch(setCurrentDialRadius)
     showSpeedDialTitles.watch(setCurrentShowSpeedDialTitles)
