@@ -1,6 +1,6 @@
 import { InfoIcon, RotateCcwIcon, Undo2Icon } from "lucide-solid"
 import { Button } from "~/components/ui/button"
-import { Sheet } from "~/components/ui/sheet"
+import { Drawer } from "~/components/ui/drawer"
 import { Text } from "~/components/ui/text"
 import {
   isSettingDrawerOpen,
@@ -149,17 +149,18 @@ export const SettingsDrawer = () => {
   }
 
   return (
-    <Sheet.Root
+    <Drawer.Root
       open={isSettingDrawerOpen()}
       onOpenChange={(e) => setIsSettingDrawerOpen(e.open)}
+      swipeDirection="end"
     >
-      <Sheet.Content variant="inset">
-        <Sheet.Header
+      <Drawer.Content placement="right" variant="inset" draggable={false}>
+        <Drawer.Header
           title="Settings"
           description="Choose how your new tab looks and works."
         />
 
-        <Sheet.Body>
+        <Drawer.Body>
           <section aria-labelledby="about-heading" class="space-y-3">
             <div>
               <Text id="about-heading" size="lg" class="font-bold">
@@ -422,10 +423,10 @@ export const SettingsDrawer = () => {
               />
             </div>
           </div>
-        </Sheet.Body>
+        </Drawer.Body>
 
-        <Sheet.Footer class="gap-3">
-          <Sheet.Close
+        <Drawer.Footer class="gap-3">
+          <Drawer.Close
             asChild={(closeProps) => (
               <Button {...closeProps()} variant="outline">
                 Close
@@ -436,9 +437,9 @@ export const SettingsDrawer = () => {
           <Button variant="outline" onClick={handleResetAll}>
             <Undo2Icon aria-hidden="true" /> Reset all settings
           </Button>
-        </Sheet.Footer>
-      </Sheet.Content>
-    </Sheet.Root>
+        </Drawer.Footer>
+      </Drawer.Content>
+    </Drawer.Root>
   )
 }
 
