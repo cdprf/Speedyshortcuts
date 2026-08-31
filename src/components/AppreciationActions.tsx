@@ -31,8 +31,10 @@ export const AppreciationActions = (props: {
   }
 
   const openReviewPage = async () => {
-    const browserName = import.meta.env.BROWSER as keyof typeof REVIEW_URLS
-    await openExternalPage(REVIEW_URLS[browserName] ?? REVIEW_URLS.chrome)
+    return openExternalPage(REVIEW_URLS.chrome)
+    // TODO: in next version
+    // const browserName = import.meta.env.BROWSER as keyof typeof REVIEW_URLS
+    // await openExternalPage(REVIEW_URLS[browserName] ?? REVIEW_URLS.chrome)
   }
 
   const openSupportPage = async () => {
