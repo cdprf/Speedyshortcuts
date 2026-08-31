@@ -1,14 +1,5 @@
-import {
-  ExternalLinkIcon,
-  HandHeartIcon,
-  InfoIcon,
-  RotateCcwIcon,
-  StarIcon,
-  Undo2Icon,
-} from "lucide-solid"
-import { browser } from "wxt/browser"
+import { InfoIcon, RotateCcwIcon, Undo2Icon } from "lucide-solid"
 import { Button } from "~/components/ui/button"
-import { Dialog } from "~/components/ui/dialog"
 import { Sheet } from "~/components/ui/sheet"
 import { Text } from "~/components/ui/text"
 import {
@@ -45,6 +36,7 @@ import { Switch } from "~/components/ui/switch"
 import { Show, createSignal, onMount, createMemo } from "solid-js"
 import { Slider } from "~/components/ui/slider"
 import { getGridDimensions } from "~/utils"
+import { AppreciationActions } from "./AppreciationActions"
 import { CustomTooltip } from "./CustomTooltip"
 
 const RADII = [
@@ -59,19 +51,7 @@ const RADII = [
   "4xl",
 ] as const
 
-const REVIEW_URLS = {
-  chrome:
-    "https://chromewebstore.google.com/detail/nice-speed-dials/igdancpfkcmgelecddchfeijbofdcnaa/reviews",
-  edge: "https://microsoftedge.microsoft.com/addons/detail/nice-speed-dials/ipdcfhnakfnmchdkpboeakmijafmgnjm",
-  firefox:
-    "https://addons.mozilla.org/en-US/firefox/addon/nice-speed-dials/reviews/",
-} as const
-
-const SUPPORT_URL = "https://buymeacoffee.com/nsde"
-
 export const SettingsDrawer = () => {
-  const [isSupportDialogOpen, setIsSupportDialogOpen] = createSignal(false)
-
   // Reactive signals for settings
   const [currentGridColumns, setCurrentGridColumns] = createSignal<
     number | undefined
@@ -168,20 +148,6 @@ export const SettingsDrawer = () => {
     ])
   }
 
-  const openExternalPage = async (url: string) => {
-    await browser.tabs.create({ url, active: true })
-  }
-
-  const openReviewPage = async () => {
-    const browserName = import.meta.env.BROWSER as keyof typeof REVIEW_URLS
-    await openExternalPage(REVIEW_URLS[browserName] ?? REVIEW_URLS.chrome)
-  }
-
-  const openSupportPage = async () => {
-    setIsSupportDialogOpen(false)
-    await openExternalPage(SUPPORT_URL)
-  }
-
   return (
     <Sheet.Root
       open={isSettingDrawerOpen()}
@@ -194,58 +160,18 @@ export const SettingsDrawer = () => {
         />
 
         <Sheet.Body>
-          <section aria-labelledby="community-heading" class="space-y-3">
+          <section aria-labelledby="about-heading" class="space-y-3">
             <div>
-              <Text id="community-heading" size="lg" class="font-bold">
-                Enjoying Nice Speed Dials?
+              <Text id="about-heading" size="lg" class="font-bold">
+                About Nice Speed Dials
               </Text>
               <Text size="sm">
-                A quick rating or a contribution helps keep the extension
-                moving.
+                See what changed, share feedback, or support future updates.
               </Text>
             </div>
 
-            <div class="flex flex-wrap gap-2">
-              <Button variant="outline" onClick={openReviewPage}>
-                <StarIcon aria-hidden="true" /> Leave a review
-              </Button>
-              <Button onClick={() => setIsSupportDialogOpen(true)}>
-                <HandHeartIcon aria-hidden="true" /> Support development
-              </Button>
-            </div>
+            <AppreciationActions showChangelog />
           </section>
-
-          <Dialog.Root
-            open={isSupportDialogOpen()}
-            onOpenChange={(e) => setIsSupportDialogOpen(e.open)}
-          >
-            <Dialog.Content size="sm">
-              <Dialog.Header
-                title="Keep Nice Speed Dials moving"
-                description="A small contribution gives this independent project more room to improve."
-              />
-              <Dialog.Body>
-                <Text>
-                  If Nice Speed Dials makes your new tab a little calmer or
-                  faster, supporting its development is a lovely way to help.
-                  Every contribution goes toward future updates and polish.
-                </Text>
-              </Dialog.Body>
-              <Dialog.Footer>
-                <Dialog.Close
-                  asChild={(closeProps) => (
-                    <Button {...closeProps()} variant="outline">
-                      Maybe later
-                    </Button>
-                  )}
-                />
-                <Button onClick={openSupportPage}>
-                  <HandHeartIcon aria-hidden="true" /> Support the project
-                  <ExternalLinkIcon aria-hidden="true" />
-                </Button>
-              </Dialog.Footer>
-            </Dialog.Content>
-          </Dialog.Root>
 
           <Divider />
 

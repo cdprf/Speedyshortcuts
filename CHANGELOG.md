@@ -17,6 +17,10 @@ See what is new and improved in each release of Nice Speed Dials.
 - Use Nice Speed Dials on Chrome, Firefox, and Edge.
 - Choose whether speed dial titles are displayed below their icons.
 - Empty folders now include a helpful shortcut for adding the first item.
+- View a dedicated update page after an extension update, with release notes,
+  review, and support options.
+- Leave a review or support ongoing development from Settings or the update
+  page.
 
 ### Improvements
 

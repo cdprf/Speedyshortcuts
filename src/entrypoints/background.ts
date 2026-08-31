@@ -9,6 +9,17 @@ const toggleSettingsDrawer = storage.defineItem<boolean>(
 )
 
 export default defineBackground(() => {
+  browser.runtime.onInstalled.addListener(async (details) => {
+    if (details.reason !== "update" || import.meta.env.MODE === "development") {
+      return
+    }
+
+    await browser.tabs.create({
+      // @ts-expect-error - getURL is defined per-project, but not inside the package
+      url: browser.runtime.getURL("/update.html"),
+    })
+  })
+
   const contextMenuHandler = async (
     info: Browser.contextMenus.OnClickData,
     tab?: Browser.tabs.Tab
