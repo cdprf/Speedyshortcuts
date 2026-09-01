@@ -28,6 +28,13 @@ export default defineConfig({
       "A fast, calm, and customizable new-tab page powered by your browser bookmarks.",
     version: "6",
     version_name: "carbon (v6)",
+    browser_specific_settings: {
+      gecko: {
+        id: "nsde@kruz.me",
+        // Firefox receives bookmark hostnames only to fetch their favicon.
+        data_collection_permissions: { required: ["bookmarksInfo"] },
+      },
+    },
     permissions: [
       "bookmarks",
       "contextMenus",
