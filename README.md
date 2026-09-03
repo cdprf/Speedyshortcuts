@@ -15,7 +15,7 @@
   <a href="https://addons.mozilla.org/en-US/firefox/addon/nice-speed-dials/">
     <img src="readme/firefox.png" height="58" alt="Get the Firefox Add-on" />
   </a>
-  <a href="https://microsoftedge.microsoft.com/addons/detail/nice-speed-dials/ipdcfhnakfnmchdkpboeakmijafmgnjm">
+  <a href="https://microsoftedge.microsoft.com/addons/detail/nice-speed-dials/bficopaolgfhkccfcnmfphkmnacekbil">
     <img src="readme/edge.png" height="58" alt="Get it from Microsoft Edge Add-ons" />
   </a>
 </p>
